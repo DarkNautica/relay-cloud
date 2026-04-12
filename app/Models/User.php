@@ -31,4 +31,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Project::class);
     }
+
+    public function activityLogs()
+    {
+        return $this->hasMany(ActivityLog::class);
+    }
+
+    public function webhooks()
+    {
+        return $this->hasMany(UserWebhook::class);
+    }
 }

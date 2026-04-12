@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AppController;
 use App\Http\Controllers\Api\DashboardStatsController;
+use App\Http\Controllers\UsageController;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -16,6 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::prefix('api')->group(function () {
                 Route::get('/apps/{appKey}', [AppController::class, 'show']);
                 Route::get('/dashboard/stats', [DashboardStatsController::class, 'index'])
+                    ->middleware(['web', 'auth']);
+                Route::get('/usage/stats', [UsageController::class, 'stats'])
                     ->middleware(['web', 'auth']);
             });
         },

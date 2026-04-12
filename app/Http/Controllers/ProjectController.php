@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Services\ActivityService;
 use App\Services\AppRegistryService;
 use App\Services\PlanService;
 use App\Services\RelayServerService;
@@ -46,6 +47,8 @@ class ProjectController extends Controller
 
         $registry->syncToServer();
 
+        ActivityService::log($user, 'project.created', 'Created project "' . $project->name . '"', ['project_id' => $project->id]);
+
         return redirect()->route('projects.show', $project)->with('success', 'Project created successfully.');
     }
 
@@ -70,6 +73,8 @@ class ProjectController extends Controller
         $project->update(['is_active' => false]);
         $registry->syncToServer();
 
+        ActivityService::log($request->user(), 'project.paused', 'Paused project "' . $project->name . '"', ['project_id' => $project->id]);
+
         return response()->json(['status' => 'paused']);
     }
 
@@ -82,6 +87,8 @@ class ProjectController extends Controller
         $project->update(['is_active' => true]);
         $registry->syncToServer();
 
+        ActivityService::log($request->user(), 'project.resumed', 'Resumed project "' . $project->name . '"', ['project_id' => $project->id]);
+
         return response()->json(['status' => 'active']);
     }
 
@@ -91,9 +98,12 @@ class ProjectController extends Controller
             abort(403);
         }
 
+        $name = $project->name;
         $project->delete();
 
         $registry->syncToServer();
+
+        ActivityService::log($request->user(), 'project.deleted', 'Deleted project "' . $name . '"');
 
         return redirect()->route('projects.index')->with('success', 'Project deleted successfully.');
     }

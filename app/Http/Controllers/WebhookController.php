@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\ActivityService;
 use App\Services\AppRegistryService;
 use App\Services\PlanService;
 use Illuminate\Http\Request;
@@ -84,6 +85,8 @@ class WebhookController extends Controller
         $user->projects()->update(['max_connections' => $maxConnections]);
 
         $registry->syncToServer();
+
+        ActivityService::log($user, 'plan.upgraded', 'Upgraded to ' . ucfirst($plan) . ' plan', ['plan' => $plan]);
 
         Log::info('Stripe checkout: user plan updated', [
             'user' => $user->id,

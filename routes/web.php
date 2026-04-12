@@ -1,11 +1,15 @@
 <?php
 
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocsController;
 use App\Http\Controllers\MarketingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\UsageController;
+use App\Http\Controllers\WebhookConfigController;
 use App\Http\Controllers\WebhookController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,9 +36,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
     Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 
+    Route::get('/usage', [UsageController::class, 'index'])->name('usage');
+    Route::get('/activity', [ActivityController::class, 'index'])->name('activity');
+
+    Route::get('/webhooks', [WebhookConfigController::class, 'index'])->name('webhooks.index');
+    Route::post('/webhooks', [WebhookConfigController::class, 'store'])->name('webhooks.store');
+    Route::delete('/webhooks/{webhook}', [WebhookConfigController::class, 'destroy'])->name('webhooks.destroy');
+    Route::post('/webhooks/{webhook}/test', [WebhookConfigController::class, 'test'])->name('webhooks.test');
+
     Route::get('/billing', [BillingController::class, 'index'])->name('billing.index');
     Route::post('/billing/checkout/{plan}', [BillingController::class, 'checkout'])->name('billing.checkout');
     Route::get('/billing/portal', [BillingController::class, 'portal'])->name('billing.portal');
+
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+    Route::put('/settings/profile', [SettingsController::class, 'updateProfile'])->name('settings.profile');
+    Route::put('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password');
+    Route::delete('/settings/account', [SettingsController::class, 'deleteAccount'])->name('settings.delete');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
