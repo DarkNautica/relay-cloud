@@ -10,7 +10,8 @@
       "Bash(\"C:\\\\Users\\\\Jayden\\\\.config\\\\herd\\\\bin\\\\composer.bat\" require:*)",
       "Bash(npm install:*)",
       "Bash(\"C:\\\\Users\\\\Jayden\\\\.config\\\\herd\\\\bin\\\\php.bat\" -r \"echo extension_loaded\\('pdo_sqlite'\\) ? 'sqlite:yes' : 'sqlite:no';\")",
-      "Bash(touch:*)"
+      "Bash(touch:*)",
+      "Bash(gh auth:*)"
     ]
   }
 }
