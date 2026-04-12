@@ -14,6 +14,19 @@ return [
     |
     */
 
+    'stripe' => [
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
+        'webhook' => [
+            'secret' => env('STRIPE_WEBHOOK_SECRET'),
+            'tolerance' => env('STRIPE_WEBHOOK_TOLERANCE', 300),
+        ],
+        'prices' => [
+            'startup' => env('STRIPE_STARTUP_PRICE_ID'),
+            'business' => env('STRIPE_BUSINESS_PRICE_ID'),
+        ],
+    ],
+
     'relay' => [
         'url' => env('RELAY_SERVER_URL', 'http://127.0.0.1:6001'),
         'apps_json_path' => env('RELAY_APPS_JSON_PATH', '/etc/relay/apps.json'),
