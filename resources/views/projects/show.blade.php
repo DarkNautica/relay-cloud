@@ -2,17 +2,21 @@
 @section('breadcrumb', 'Projects / ' . $project->name)
 
 @section('content')
-<div class="page-header">
-    <div>
-        <div style="display:flex;align-items:center;gap:10px;">
-            <h1 class="page-title">{{ $project->name }}</h1>
-            <span class="badge {{ $project->is_active ? 'badge-active' : 'badge-inactive' }}">
-                <span class="badge-dot"></span>{{ $project->is_active ? 'Active' : 'Inactive' }}
-            </span>
-        </div>
-        <p class="page-sub">Manage credentials and monitor this project.</p>
+<div style="margin-bottom:24px;">
+    <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-tertiary);margin-bottom:10px;">
+        <a href="{{ route('projects.index') }}" style="color:var(--accent-light);display:flex;align-items:center;gap:4px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><polyline points="15 18 9 12 15 6"/></svg>
+            Projects
+        </a>
+        <span>/</span>
+        <span style="color:var(--text-secondary);">{{ $project->name }}</span>
     </div>
-    <a href="{{ route('projects.index') }}" class="btn btn-secondary btn-sm">Back</a>
+    <div style="display:flex;align-items:center;gap:10px;">
+        <h1 class="page-title">{{ $project->name }}</h1>
+        <span class="badge {{ $project->is_active ? 'badge-active' : 'badge-inactive' }}">
+            <span class="badge-dot"></span>{{ $project->is_active ? 'Active' : 'Inactive' }}
+        </span>
+    </div>
 </div>
 
 <!-- Live Stats -->

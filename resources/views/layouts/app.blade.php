@@ -127,9 +127,9 @@
         }
         .stat-card:hover { border-color: var(--border-strong); }
         .stat-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-        .stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); }
-        .stat-icon { width: 16px; height: 16px; color: var(--text-tertiary); }
-        .stat-value { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; color: var(--text-primary); line-height: 1; }
+        .stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #6b6a7a; }
+        .stat-icon { width: 16px; height: 16px; color: var(--accent-light); }
+        .stat-value { font-size: 36px; font-weight: 700; letter-spacing: -0.02em; color: var(--text-primary); line-height: 1; }
         .stat-sub { font-size: 12px; color: var(--text-tertiary); margin-top: 6px; }
         .stat-sub a { color: var(--accent-light); }
         .stat-sub a:hover { text-decoration: underline; }
@@ -173,6 +173,10 @@
         td { padding: 14px 20px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-secondary); vertical-align: middle; }
         tr:last-child td { border-bottom: none; }
         tbody tr { transition: background 150ms ease; cursor: pointer; }
+        .col-status { width: 120px; }
+        .col-conn { width: 160px; }
+        .col-created { width: 160px; }
+        .col-actions { width: 60px; }
         tbody tr:hover { background: var(--bg-hover); }
 
         /* ── Badges ── */
@@ -259,7 +263,9 @@
 
         /* ── Progress Bars ── */
         .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 300ms; }
+        .progress-fill { height: 100%; border-radius: 3px; transition: width 300ms; background: var(--success); }
+        .progress-fill.amber { background: var(--warning); }
+        .progress-fill.red { background: var(--danger); }
 
         /* ── Danger Zone ── */
         .danger-zone { border: 1px solid rgba(239,68,68,0.15); border-radius: 12px; padding: 24px; }

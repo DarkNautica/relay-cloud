@@ -29,7 +29,7 @@
     <div class="card">
         <div style="overflow-x:auto;">
             <table>
-                <thead><tr><th>Name</th><th>Status</th><th>Connections</th><th>Created</th><th></th></tr></thead>
+                <thead><tr><th>Name</th><th class="col-status">Status</th><th class="col-conn">Connections</th><th class="col-created">Created</th><th class="col-actions"></th></tr></thead>
                 <tbody>
                 @foreach($projects as $project)
                     <tr onclick="window.location='{{ route('projects.show', $project) }}'">

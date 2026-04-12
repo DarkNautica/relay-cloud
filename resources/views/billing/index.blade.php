@@ -27,23 +27,36 @@
 <div class="card card-pad" style="margin-bottom:20px;">
     <div style="font-size:14px;font-weight:600;margin-bottom:16px;">Current Usage</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        @php
+            $projPct = $maxProjects > 0 ? round(($projectCount / $maxProjects) * 100) : 0;
+            $projColor = $projPct >= 90 ? 'red' : ($projPct >= 70 ? 'amber' : '');
+        @endphp
         <div>
             <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px;">
                 <span style="color:var(--text-tertiary);">Projects</span>
                 <span style="font-family:var(--font-mono);font-size:11px;">{{ $projectCount }} / {{ $maxProjects }}</span>
             </div>
-            <div class="progress-bar">
-                <div class="progress-fill" style="width:{{ $maxProjects > 0 ? min(100, ($projectCount / $maxProjects) * 100) : 0 }}%"></div>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <div class="progress-bar" style="flex:1;">
+                    <div class="progress-fill {{ $projColor }}" style="width:{{ $projPct }}%"></div>
+                </div>
+                <span style="font-size:11px;font-weight:600;color:var(--text-tertiary);min-width:32px;text-align:right;">{{ $projPct }}%</span>
             </div>
         </div>
+        @php
+            $connPct = $maxConnections > 0 ? round(($totalConnections / $maxConnections) * 100) : 0;
+            $connColor = $connPct >= 90 ? 'red' : ($connPct >= 70 ? 'amber' : '');
+        @endphp
         <div>
             <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px;">
                 <span style="color:var(--text-tertiary);">Max Connections</span>
                 <span style="font-family:var(--font-mono);font-size:11px;">{{ number_format($totalConnections) }} / {{ $maxConnections == -1 ? 'Unlimited' : number_format($maxConnections) }}</span>
             </div>
-            <div class="progress-bar">
-                @php $pct = $maxConnections > 0 ? min(100, ($totalConnections / $maxConnections) * 100) : 0; @endphp
-                <div class="progress-fill" style="width:{{ $pct }}%"></div>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <div class="progress-bar" style="flex:1;">
+                    <div class="progress-fill {{ $connColor }}" style="width:{{ $connPct }}%"></div>
+                </div>
+                <span style="font-size:11px;font-weight:600;color:var(--text-tertiary);min-width:32px;text-align:right;">{{ $connPct }}%</span>
             </div>
         </div>
     </div>
