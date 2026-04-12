@@ -298,12 +298,11 @@
         .ctx-trigger:hover { background: var(--bg-hover); border-color: var(--border); color: var(--text-secondary); }
         .ctx-trigger svg { width: 16px; height: 16px; }
         .ctx-dropdown {
-            display: none; position: absolute; right: 0; top: 36px; z-index: 100;
+            display: none; position: fixed; z-index: 200;
             background: var(--bg-elevated); border: 1px solid var(--border);
             border-radius: 10px; box-shadow: var(--shadow-elevated);
-            min-width: 180px; padding: 4px; overflow: hidden;
+            min-width: 180px; padding: 4px;
         }
-        .ctx-dropdown.open { display: block; }
         .ctx-item {
             display: flex; align-items: center; gap: 8px; width: 100%;
             padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: 500;
@@ -434,12 +433,20 @@
         }
     }
     function toggleSecret() { document.getElementById('secret-value').classList.toggle('cred-blurred'); }
-    document.addEventListener('click', e => {
-        document.querySelectorAll('.ctx-dropdown.open').forEach(d => {
-            if (!d.parentElement.contains(e.target)) d.classList.remove('open');
-        });
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.ctx-dropdown').forEach(d => d.style.display = 'none');
     });
-    function toggleCtx(el) { el.closest('.ctx-menu').querySelector('.ctx-dropdown').classList.toggle('open'); }
+    function toggleCtx(el, e) {
+        if (e) e.stopPropagation();
+        const dd = el.closest('.ctx-menu').querySelector('.ctx-dropdown');
+        const open = dd.style.display === 'block';
+        document.querySelectorAll('.ctx-dropdown').forEach(d => d.style.display = 'none');
+        if (open) return;
+        dd.style.display = 'block';
+        const rect = el.getBoundingClientRect();
+        dd.style.top = (rect.bottom + 8) + 'px';
+        dd.style.left = (rect.right - dd.offsetWidth) + 'px';
+    }
     </script>
 </body>
 </html>

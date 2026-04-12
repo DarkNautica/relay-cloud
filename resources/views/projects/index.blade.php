@@ -46,7 +46,7 @@
                         <td style="color:var(--text-tertiary);font-size:12px;">{{ $project->created_at->diffForHumans() }}</td>
                         <td style="width:40px;" onclick="event.stopPropagation()">
                             <div class="ctx-menu">
-                                <button class="ctx-trigger" onclick="toggleCtx(this)">
+                                <button class="ctx-trigger" onclick="toggleCtx(this,event)">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
                                 </button>
                                 <div class="ctx-dropdown">
