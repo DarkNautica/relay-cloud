@@ -16,6 +16,7 @@ return [
 
     'relay' => [
         'url' => env('RELAY_SERVER_URL', 'http://127.0.0.1:6001'),
+        'apps_json_path' => env('RELAY_APPS_JSON_PATH', '/etc/relay/apps.json'),
     ],
 
     'postmark' => [

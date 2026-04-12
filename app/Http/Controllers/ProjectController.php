@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Services\AppRegistryService;
 use App\Services\PlanService;
 use App\Services\RelayServerService;
 use Illuminate\Http\Request;
@@ -26,7 +27,7 @@ class ProjectController extends Controller
         return view('projects.create', compact('canCreate', 'maxProjects', 'currentCount'));
     }
 
-    public function store(Request $request, PlanService $planService)
+    public function store(Request $request, PlanService $planService, AppRegistryService $registry)
     {
         $user = $request->user();
 
@@ -43,6 +44,8 @@ class ProjectController extends Controller
             'max_connections' => $planService->getLimit($user, 'max_connections'),
         ]);
 
+        $registry->syncToServer();
+
         return redirect()->route('projects.show', $project)->with('success', 'Project created successfully.');
     }
 
@@ -58,13 +61,15 @@ class ProjectController extends Controller
         return view('projects.show', compact('project', 'liveStats', 'eventLog'));
     }
 
-    public function destroy(Request $request, Project $project)
+    public function destroy(Request $request, Project $project, AppRegistryService $registry)
     {
         if ($project->user_id !== $request->user()->id) {
             abort(403);
         }
 
         $project->delete();
+
+        $registry->syncToServer();
 
         return redirect()->route('projects.index')->with('success', 'Project deleted successfully.');
     }
