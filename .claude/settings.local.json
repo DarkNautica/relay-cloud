@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php artisan:*)",
+      "Bash(composer --version)",
+      "Bash(C:/Users/Jayden/AppData/Local/Programs/Herd/resources/bin/php artisan:*)",
+      "Bash(where php:*)",
+      "Bash(where composer:*)",
+      "Bash(\"C:\\\\Users\\\\Jayden\\\\.config\\\\herd\\\\bin\\\\php.bat\" artisan:*)",
+      "Bash(\"C:\\\\Users\\\\Jayden\\\\.config\\\\herd\\\\bin\\\\composer.bat\" require:*)",
+      "Bash(npm install:*)",
+      "Bash(\"C:\\\\Users\\\\Jayden\\\\.config\\\\herd\\\\bin\\\\php.bat\" -r \"echo extension_loaded\\('pdo_sqlite'\\) ? 'sqlite:yes' : 'sqlite:no';\")",
+      "Bash(touch:*)"
+    ]
+  }
+}

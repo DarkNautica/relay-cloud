@@ -1,0 +1,88 @@
+@extends('layouts.app')
+
+@section('header', 'Billing')
+
+@section('content')
+<div style="margin-bottom: 32px;">
+    <h1 class="page-title">Billing & Plans</h1>
+    <p class="page-subtitle">Manage your subscription and view usage.</p>
+</div>
+
+<!-- Usage Summary -->
+<div class="card" style="margin-bottom: 24px;">
+    <div class="card-header">
+        <h2 class="card-title">Current Usage</h2>
+    </div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+                <span style="color:var(--text-muted)">Projects</span>
+                <span>{{ $projectCount }} / {{ $plans[$currentPlan]['max_projects'] }}</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ $plans[$currentPlan]['max_projects'] > 0 ? min(100, ($projectCount / $plans[$currentPlan]['max_projects']) * 100) : 0 }}%"></div>
+            </div>
+        </div>
+        <div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+                <span style="color:var(--text-muted)">Max Connections</span>
+                <span>{{ number_format($totalConnections) }} / {{ $plans[$currentPlan]['max_connections'] == -1 ? 'Unlimited' : number_format($plans[$currentPlan]['max_connections']) }}</span>
+            </div>
+            <div class="progress-bar">
+                @php
+                    $maxConn = $plans[$currentPlan]['max_connections'];
+                    $connPercent = $maxConn > 0 ? min(100, ($totalConnections / $maxConn) * 100) : 0;
+                @endphp
+                <div class="progress-fill" style="width: {{ $connPercent }}%"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Plan Cards -->
+<div class="plan-cards">
+    @foreach($plans as $slug => $plan)
+    <div class="plan-card {{ $currentPlan === $slug ? 'current' : '' }}">
+        @if($currentPlan === $slug)
+            <div style="position:absolute; top:16px; right:16px;">
+                <span class="plan-badge">Current Plan</span>
+            </div>
+        @endif
+        <div class="plan-card-name">{{ $plan['name'] }}</div>
+        <div class="plan-card-price">
+            ${{ $plan['price'] }}<span>/mo</span>
+        </div>
+        <div class="plan-card-desc">
+            @if($slug === 'hobby') Perfect for side projects and testing.
+            @elseif($slug === 'startup') For growing apps with real users.
+            @else For production apps at scale.
+            @endif
+        </div>
+        <ul class="plan-features">
+            <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                {{ number_format($plan['max_connections']) }} max connections
+            </li>
+            <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                {{ $plan['max_messages_day'] == -1 ? 'Unlimited' : number_format($plan['max_messages_day']) }} messages/day
+            </li>
+            <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                {{ $plan['max_projects'] }} project{{ $plan['max_projects'] === 1 ? '' : 's' }}
+            </li>
+        </ul>
+        @if($currentPlan === $slug)
+            <button class="btn btn-secondary" disabled style="width:100%; justify-content:center; opacity:0.5;">Current Plan</button>
+        @elseif(array_search($slug, array_keys($plans)) > array_search($currentPlan, array_keys($plans)))
+            <form method="POST" action="{{ route('billing.upgrade', $slug) }}">
+                @csrf
+                <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Upgrade to {{ $plan['name'] }}</button>
+            </form>
+        @else
+            <button class="btn btn-secondary" disabled style="width:100%; justify-content:center; opacity:0.5;">Downgrade</button>
+        @endif
+    </div>
+    @endforeach
+</div>
+@endsection
