@@ -74,7 +74,7 @@
 
 <h4>Example Request</h4>
 
-<pre><code>POST /apps/my-app/events
+<pre><code class="language-http">POST /apps/my-app/events
 Content-Type: application/json
 
 {
@@ -89,7 +89,7 @@ Content-Type: application/json
 
 <h4>Example Request</h4>
 
-<pre><code>POST /apps/my-app/events/batch
+<pre><code class="language-http">POST /apps/my-app/events/batch
 Content-Type: application/json
 
 {
@@ -136,7 +136,7 @@ Content-Type: application/json
 
 <h4>Example Response</h4>
 
-<pre><code>{
+<pre><code class="language-json">{
   "channels": {
     "private-users": { "subscription_count": 12 },
     "presence-chat": { "user_count": 5 }
@@ -149,7 +149,7 @@ Content-Type: application/json
 
 <h4>Example Response</h4>
 
-<pre><code>{
+<pre><code class="language-json">{
   "occupied": true,
   "subscription_count": 8
 }</code></pre>
@@ -160,7 +160,7 @@ Content-Type: application/json
 
 <h4>Example Response</h4>
 
-<pre><code>{
+<pre><code class="language-json">{
   "users": [
     { "id": "1" },
     { "id": "2" },
@@ -217,7 +217,7 @@ Content-Type: application/json
 
 <h4>Example Response</h4>
 
-<pre><code>{
+<pre><code class="language-json">{
   "connections": 142,
   "channels": 37
 }</code></pre>
@@ -232,7 +232,7 @@ Content-Type: application/json
 
 <p>Connect to the WebSocket server at:</p>
 
-<pre><code>ws://localhost:6001/app/{appKey}</code></pre>
+<pre><code class="language-plaintext">ws://localhost:6001/app/{appKey}</code></pre>
 
 <p>Replace <code>{appKey}</code> with your app key. For TLS connections, use <code>wss://</code> instead.</p>
 

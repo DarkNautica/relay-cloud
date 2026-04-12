@@ -33,7 +33,7 @@
 </div>
 
 <div data-tab-group="server" data-tab="docker" class="tab-panel active">
-    <pre><code>docker run -d -p 6001:6001 \
+    <pre><code class="language-bash">docker run -d -p 6001:6001 \
   -e RELAY_APP_KEY=my-key \
   -e RELAY_APP_SECRET=my-secret \
   relayhq/relay:latest</code></pre>
@@ -42,11 +42,11 @@
 
 <div data-tab-group="server" data-tab="binary" class="tab-panel">
     <p>Download the latest binary from <a href="https://github.com/DarkNautica/Relay/releases" target="_blank">GitHub Releases</a> for your platform, then run:</p>
-    <pre><code>./relay-server</code></pre>
+    <pre><code class="language-bash">./relay-server</code></pre>
 </div>
 
 <div data-tab-group="server" data-tab="source" class="tab-panel">
-    <pre><code>git clone https://github.com/DarkNautica/Relay.git &amp;&amp; cd Relay
+    <pre><code class="language-bash">git clone https://github.com/DarkNautica/Relay.git &amp;&amp; cd Relay
 go build -o relay-server .
 ./relay-server</code></pre>
 </div>
@@ -59,11 +59,11 @@ go build -o relay-server .
 
 <p>Install the Relay JavaScript SDK:</p>
 
-<pre><code>npm install @relayhq/relay-js</code></pre>
+<pre><code class="language-bash">npm install @relayhq/relay-js</code></pre>
 
 <p>Then connect to your Relay server and subscribe to a channel:</p>
 
-<pre><code>import Relay from '@relayhq/relay-js';
+<pre><code class="language-javascript">import Relay from '@relayhq/relay-js';
 
 const relay = new Relay('my-key', {
     host: 'localhost',
@@ -97,10 +97,10 @@ channel.bind('my-event', (data) =&gt; {
 
 <div data-tab-group="publish" data-tab="laravel" class="tab-panel active">
     <h4>Install</h4>
-    <pre><code>composer require relayhq/relay-php</code></pre>
+    <pre><code class="language-bash">composer require relayhq/relay-php</code></pre>
 
     <h4>config/broadcasting.php</h4>
-    <pre><code>'relay' =&gt; [
+    <pre><code class="language-php">'relay' =&gt; [
     'driver' =&gt; 'pusher',
     'key' =&gt; env('RELAY_APP_KEY'),
     'secret' =&gt; env('RELAY_APP_SECRET'),
@@ -113,16 +113,16 @@ channel.bind('my-event', (data) =&gt; {
 ],</code></pre>
 
     <h4>.env</h4>
-    <pre><code>BROADCAST_CONNECTION=relay
+    <pre><code class="language-bash">BROADCAST_CONNECTION=relay
 RELAY_APP_KEY=my-key
 RELAY_APP_SECRET=my-secret</code></pre>
 
     <h4>Publish an event</h4>
-    <pre><code>broadcast(new OrderShipped($order));</code></pre>
+    <pre><code class="language-php">broadcast(new OrderShipped($order));</code></pre>
 </div>
 
 <div data-tab-group="publish" data-tab="node" class="tab-panel">
-    <pre><code>const Pusher = require('pusher');
+    <pre><code class="language-javascript">const Pusher = require('pusher');
 
 const pusher = new Pusher({
     appId: 'app',
@@ -140,10 +140,10 @@ await pusher.trigger('my-channel', 'my-event', {
 
 <div data-tab-group="publish" data-tab="rails" class="tab-panel">
     <h4>Gemfile</h4>
-    <pre><code>gem 'pusher'</code></pre>
+    <pre><code class="language-ruby">gem 'pusher'</code></pre>
 
     <h4>config/initializers/pusher.rb</h4>
-    <pre><code>Pusher.app_id = 'app'
+    <pre><code class="language-ruby">Pusher.app_id = 'app'
 Pusher.key = 'my-key'
 Pusher.secret = 'my-secret'
 Pusher.host = 'localhost'
@@ -151,15 +151,15 @@ Pusher.port = 6001
 Pusher.encrypted = false</code></pre>
 
     <h4>Trigger an event</h4>
-    <pre><code>Pusher.trigger('my-channel', 'my-event', { message: 'Hello!' })</code></pre>
+    <pre><code class="language-ruby">Pusher.trigger('my-channel', 'my-event', { message: 'Hello!' })</code></pre>
 </div>
 
 <div data-tab-group="publish" data-tab="django" class="tab-panel">
     <h4>Install</h4>
-    <pre><code>pip install pusher</code></pre>
+    <pre><code class="language-bash">pip install pusher</code></pre>
 
     <h4>Trigger an event</h4>
-    <pre><code>import pusher
+    <pre><code class="language-python">import pusher
 
 client = pusher.Pusher(
     app_id='app',
@@ -186,7 +186,7 @@ client.trigger('my-channel', 'my-event', {'message': 'Hello!'})</code></pre>
 </div>
 
 <h4>Subscribe on the client</h4>
-<pre><code>const privateChannel = relay.subscribe('private-orders');
+<pre><code class="language-javascript">const privateChannel = relay.subscribe('private-orders');
 privateChannel.bind('new-order', (data) =&gt; {
     console.log('New order:', data);
 });</code></pre>
@@ -194,14 +194,14 @@ privateChannel.bind('new-order', (data) =&gt; {
 <h4>Laravel auth setup</h4>
 <p>Laravel handles this automatically via the <code>BroadcastServiceProvider</code>. Define your channel authorization in <code>routes/channels.php</code>:</p>
 
-<pre><code>// routes/channels.php
+<pre><code class="language-php">// routes/channels.php
 Broadcast::channel('private-orders', function ($user) {
     return $user-&gt;canViewOrders();
 });</code></pre>
 
 <p>Make sure broadcasting is enabled in <code>config/app.php</code> by uncommenting the <code>BroadcastServiceProvider</code>:</p>
 
-<pre><code>// config/app.php &mdash; providers array
+<pre><code class="language-php">// config/app.php &mdash; providers array
 App\Providers\BroadcastServiceProvider::class,</code></pre>
 
 {{-- Step 5 --}}
@@ -213,7 +213,7 @@ App\Providers\BroadcastServiceProvider::class,</code></pre>
 <p>Presence channels extend private channels with awareness of who is currently subscribed. They are ideal for showing online indicators, typing notifications, or collaborative features. Channel names must be prefixed with <code>presence-</code>.</p>
 
 <h4>Subscribe on the client</h4>
-<pre><code>const presenceChannel = relay.subscribe('presence-chat-room');
+<pre><code class="language-javascript">const presenceChannel = relay.subscribe('presence-chat-room');
 
 presenceChannel.bind('relay:subscription_succeeded', (members) =&gt; {
     console.log('Online now:', members.count);
@@ -231,7 +231,7 @@ presenceChannel.bind('relay:member_removed', (member) =&gt; {
 });</code></pre>
 
 <h4>Authorize on the backend (Laravel)</h4>
-<pre><code>// routes/channels.php
+<pre><code class="language-php">// routes/channels.php
 Broadcast::channel('presence-chat-room', function ($user) {
     return ['id' =&gt; $user-&gt;id, 'name' =&gt; $user-&gt;name];
 });</code></pre>
@@ -242,7 +242,7 @@ Broadcast::channel('presence-chat-room', function ($user) {
 
 <h3>BROADCAST_CONNECTION vs BROADCAST_DRIVER</h3>
 <p>In <strong>Laravel 11+</strong>, the environment variable was renamed from <code>BROADCAST_DRIVER</code> to <code>BROADCAST_CONNECTION</code>. If events are not reaching Relay, make sure your <code>.env</code> uses the correct key for your Laravel version:</p>
-<pre><code># Laravel 11+
+<pre><code class="language-bash"># Laravel 11+
 BROADCAST_CONNECTION=relay
 
 # Laravel 10 and earlier
@@ -250,14 +250,14 @@ BROADCAST_DRIVER=relay</code></pre>
 
 <h3>CSRF Exemption for Auth Endpoint</h3>
 <p>The Relay JavaScript client sends a POST request to <code>/broadcasting/auth</code>. If you receive a <code>419</code> status code, add the route to your CSRF exceptions:</p>
-<pre><code>// app/Http/Middleware/VerifyCsrfToken.php
+<pre><code class="language-php">// app/Http/Middleware/VerifyCsrfToken.php
 protected $except = [
     'broadcasting/auth',
 ];</code></pre>
 
 <h3>Event Name Prefixes</h3>
 <p>Laravel automatically prefixes broadcast event names with the fully qualified class name, e.g. <code>App\Events\OrderShipped</code>. If you are listening for events by their raw name on the client, prefix the listener with a dot to bypass the namespace:</p>
-<pre><code>// Listen for the raw event name (no App\Events\ prefix)
+<pre><code class="language-javascript">// Listen for the raw event name (no App\Events\ prefix)
 channel.bind('.my-event', (data) =&gt; {
     console.log(data);
 });</code></pre>

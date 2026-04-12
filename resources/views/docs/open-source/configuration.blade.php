@@ -106,7 +106,7 @@
 
 <p>Place the file at <code>/etc/relay/apps.json</code>:</p>
 
-<pre><code>[
+<pre><code class="language-json">[
   {
     "id": "app_1",
     "key": "key-1",
@@ -129,7 +129,7 @@
 
 <p>A complete <code>docker-compose.yml</code> example with all common options:</p>
 
-<pre><code>version: '3.8'
+<pre><code class="language-yaml">version: '3.8'
 services:
   relay:
     image: relayhq/relay:latest

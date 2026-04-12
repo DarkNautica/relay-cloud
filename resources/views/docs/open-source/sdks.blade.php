@@ -47,11 +47,11 @@
 <h2>Laravel (relay-php)</h2>
 
 <h3>Installation</h3>
-<pre><code>composer require relayhq/relay-php</code></pre>
+<pre><code class="language-bash">composer require relayhq/relay-php</code></pre>
 
 <h3>Configuration</h3>
 <p>Add a <code>relay</code> connection to <code>config/broadcasting.php</code>:</p>
-<pre><code>'relay' => [
+<pre><code class="language-php">'relay' => [
     'driver' => 'pusher',
     'key' => env('RELAY_APP_KEY'),
     'secret' => env('RELAY_APP_SECRET'),
@@ -64,7 +64,7 @@
 ],</code></pre>
 
 <h3>Publishing Events</h3>
-<pre><code>// Using Laravel broadcasting
+<pre><code class="language-php">// Using Laravel broadcasting
 broadcast(new MessageSent($message));
 
 // Direct usage
@@ -74,7 +74,7 @@ $pusher->trigger('my-channel', 'my-event', ['message' => 'Hello']);</code></pre>
 
 <h3>Auth for Private Channels</h3>
 <p>Define authorization callbacks in <code>routes/channels.php</code>:</p>
-<pre><code>Broadcast::channel('orders.{id}', function ($user, $id) {
+<pre><code class="language-php">Broadcast::channel('orders.{id}', function ($user, $id) {
     return $user->id === Order::findOrNew($id)->user_id;
 });</code></pre>
 
@@ -82,10 +82,10 @@ $pusher->trigger('my-channel', 'my-event', ['message' => 'Hello']);</code></pre>
 <h2>Node.js (relay-node)</h2>
 
 <h3>Installation</h3>
-<pre><code>npm install @relayhq/relay-node</code></pre>
+<pre><code class="language-bash">npm install @relayhq/relay-node</code></pre>
 
 <h3>Setup &amp; Publishing</h3>
-<pre><code>const Pusher = require('pusher');
+<pre><code class="language-javascript">const Pusher = require('pusher');
 const pusher = new Pusher({
     appId: 'app',
     key: 'my-key',
@@ -105,7 +105,7 @@ await pusher.triggerBatch([
 ]);</code></pre>
 
 <h3>Express Auth Middleware</h3>
-<pre><code>app.post('/broadcasting/auth', (req, res) => {
+<pre><code class="language-javascript">app.post('/broadcasting/auth', (req, res) => {
     const { socket_id, channel_name } = req.body;
     const auth = pusher.authorizeChannel(socket_id, channel_name);
     res.send(auth);
@@ -116,10 +116,10 @@ await pusher.triggerBatch([
 
 <h3>Installation</h3>
 <p>Add to your <code>Gemfile</code>:</p>
-<pre><code>gem 'pusher'</code></pre>
+<pre><code class="language-ruby">gem 'pusher'</code></pre>
 
 <h3>Configuration</h3>
-<pre><code># config/initializers/pusher.rb
+<pre><code class="language-ruby"># config/initializers/pusher.rb
 Pusher.app_id = 'app'
 Pusher.key = 'my-key'
 Pusher.secret = 'my-secret'
@@ -128,7 +128,7 @@ Pusher.port = 6001
 Pusher.encrypted = false</code></pre>
 
 <h3>Usage</h3>
-<pre><code>Pusher.trigger('my-channel', 'my-event', { message: 'Hello' })
+<pre><code class="language-ruby">Pusher.trigger('my-channel', 'my-event', { message: 'Hello' })
 
 # Batch
 Pusher.trigger_batch([
@@ -136,7 +136,7 @@ Pusher.trigger_batch([
 ])</code></pre>
 
 <h3>Auth Controller</h3>
-<pre><code>class PusherController < ApplicationController
+<pre><code class="language-ruby">class PusherController < ApplicationController
   def auth
     response = Pusher.authenticate(params[:channel_name], params[:socket_id])
     render json: response
@@ -147,10 +147,10 @@ end</code></pre>
 <h2>Django/Python (relay-python)</h2>
 
 <h3>Installation</h3>
-<pre><code>pip install relay-python</code></pre>
+<pre><code class="language-bash">pip install relay-python</code></pre>
 
 <h3>Setup &amp; Sync Publishing</h3>
-<pre><code>import pusher
+<pre><code class="language-python">import pusher
 
 client = pusher.Pusher(
     app_id='app',
@@ -164,7 +164,7 @@ client = pusher.Pusher(
 client.trigger('my-channel', 'my-event', {'message': 'Hello'})</code></pre>
 
 <h3>Async</h3>
-<pre><code>import asyncio
+<pre><code class="language-python">import asyncio
 from pusher import AsyncPusher
 
 async def publish():
@@ -172,12 +172,12 @@ async def publish():
     await client.trigger('my-channel', 'my-event', {'message': 'Hello'})</code></pre>
 
 <h3>Batch</h3>
-<pre><code>client.trigger_batch([
+<pre><code class="language-python">client.trigger_batch([
     {'channel': 'ch-1', 'name': 'evt-1', 'data': {'msg': 'Hello'}},
 ])</code></pre>
 
 <h3>Django Auth View</h3>
-<pre><code>from django.http import JsonResponse
+<pre><code class="language-python">from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
