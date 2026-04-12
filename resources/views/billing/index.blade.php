@@ -44,13 +44,13 @@
             </div>
         </div>
         @php
-            $connPct = $maxConnections > 0 ? round(($totalConnections / $maxConnections) * 100) : 0;
+            $connPct = $maxConnections > 0 ? round(($activeConnections / $maxConnections) * 100) : 0;
             $connColor = $connPct >= 90 ? 'red' : ($connPct >= 70 ? 'amber' : '');
         @endphp
         <div>
             <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px;">
-                <span style="color:var(--text-tertiary);">Max Connections</span>
-                <span style="font-family:var(--font-mono);font-size:11px;">{{ number_format($totalConnections) }} / {{ $maxConnections == -1 ? 'Unlimited' : number_format($maxConnections) }}</span>
+                <span style="color:var(--text-tertiary);">Active Connections</span>
+                <span style="font-family:var(--font-mono);font-size:11px;">{{ number_format($activeConnections) }} / {{ $maxConnections == -1 ? 'Unlimited' : number_format($maxConnections) }}</span>
             </div>
             <div style="display:flex;align-items:center;gap:10px;">
                 <div class="progress-bar" style="flex:1;">

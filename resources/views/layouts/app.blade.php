@@ -393,7 +393,7 @@
 
     <div class="main">
         <header class="top-bar">
-            <div class="top-bar-left">@yield('breadcrumb', 'Dashboard')</div>
+            <div class="top-bar-left"></div>
             <div class="top-bar-right">
                 @hasSection('server-status')
                     @yield('server-status')

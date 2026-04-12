@@ -3,23 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Services\PlanService;
+use App\Services\RelayServerService;
 use Illuminate\Http\Request;
 
 class BillingController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, RelayServerService $relay)
     {
         $user = auth()->user()->fresh();
         $currentPlan = $user->plan ?? 'hobby';
         $plans = PlanService::PLANS;
         $projectCount = $user->projects()->count();
-        $totalConnections = $user->projects()->sum('max_connections');
         $isSubscribed = $user->subscribed('default');
         $maxConnections = PlanService::getPlan($currentPlan)['max_connections'];
         $maxProjects = PlanService::getPlan($currentPlan)['max_projects'];
 
+        $serverStats = $relay->getServerStats();
+        $activeConnections = $serverStats['connections'];
+
         return view('billing.index', compact(
-            'currentPlan', 'plans', 'projectCount', 'totalConnections',
+            'currentPlan', 'plans', 'projectCount', 'activeConnections',
             'isSubscribed', 'maxConnections', 'maxProjects'
         ));
     }
