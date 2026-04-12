@@ -97,10 +97,10 @@
     <div class="cred-row">
         <div style="flex:1; min-width:0;">
             <div class="cred-label">WebSocket URL</div>
-            <div class="cred-value">ws://relay.yourdomain.com/app/{{ $project->app_key }}</div>
+            <div class="cred-value">wss://ws.relaycloud.dev/app/{{ $project->app_key }}</div>
         </div>
         <div class="cred-actions">
-            <button class="icon-btn" onclick="copyToClipboard('ws://relay.yourdomain.com/app/{{ $project->app_key }}')" title="Copy">
+            <button class="icon-btn" onclick="copyToClipboard('wss://ws.relaycloud.dev/app/{{ $project->app_key }}')" title="Copy">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             </button>
         </div>
@@ -125,9 +125,9 @@
     'secret' => '{{ $project->app_secret }}',
     'app_id' => '{{ $project->app_id }}',
     'options' => [
-        'host' => 'relay.yourdomain.com',
-        'port' => 6001,
-        'scheme' => 'http',
+        'host' => 'ws.relaycloud.dev',
+        'port' => 443,
+        'scheme' => 'https',
     ],
 ],</pre>
     </div>
@@ -138,9 +138,9 @@ const pusher = new Pusher({
     appId: '{{ $project->app_id }}',
     key: '{{ $project->app_key }}',
     secret: '{{ $project->app_secret }}',
-    host: 'relay.yourdomain.com',
-    port: 6001,
-    useTLS: false,
+    host: 'ws.relaycloud.dev',
+    port: 443,
+    useTLS: true,
 });
 
 pusher.trigger('my-channel', 'my-event', {
@@ -156,9 +156,9 @@ window.Pusher = Pusher;
 const echo = new Echo({
     broadcaster: 'pusher',
     key: '{{ $project->app_key }}',
-    wsHost: 'relay.yourdomain.com',
-    wsPort: 6001,
-    forceTLS: false,
+    wsHost: 'ws.relaycloud.dev',
+    wssPort: 443,
+    forceTLS: true,
     disableStats: true,
 });
 
