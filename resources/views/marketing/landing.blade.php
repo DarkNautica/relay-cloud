@@ -19,9 +19,10 @@
     .terminal pre{padding:18px 20px;font-family:var(--mono);font-size:12px;line-height:1.8;color:var(--t2);overflow-x:auto}
     .terminal .cmd{color:var(--t1)}.terminal .ok{color:var(--success)}
     .features{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:960px;margin:0 auto;padding:0 24px 64px}
-    .feat-card{background:linear-gradient(145deg,#161620,#111115);border:1px solid var(--border);border-top:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:28px;box-shadow:0 1px 3px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.04)}
-    .feat-card h3{font-size:16px;font-weight:700;margin-bottom:6px}
-    .feat-card p{font-size:13px;line-height:1.6;color:var(--t2);margin:0}
+    .feat-card{background:linear-gradient(145deg,#161620,#111115);border:1px solid #2a2a35;border-top:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:28px;box-shadow:0 1px 3px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.04)}
+    .feat-icon{width:36px;height:36px;color:var(--accent-l);margin-bottom:14px}
+    .feat-card h3{font-size:18px;font-weight:600;color:#f1f0f5;margin-bottom:8px}
+    .feat-card p{font-size:14px;line-height:1.7;color:#8b8a98;margin:0}
     .section{max-width:960px;margin:0 auto;padding:0 24px 64px}
     .section-title{font-size:24px;font-weight:700;letter-spacing:-0.02em;text-align:center;margin-bottom:8px}
     .section-sub{text-align:center;font-size:14px;color:var(--t2);margin-bottom:32px}
@@ -64,14 +65,17 @@
 
 <div class="features">
     <div class="feat-card">
+        <svg class="feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
         <h3>Self-Hosted</h3>
         <p>Full control. Your server, your data, your rules. One binary, no runtime dependencies.</p>
     </div>
     <div class="feat-card">
+        <svg class="feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
         <h3>Relay Cloud</h3>
         <p>Managed hosting from $19/month. SSL, monitoring, and automatic updates included.</p>
     </div>
     <div class="feat-card">
+        <svg class="feat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
         <h3>Pusher Compatible</h3>
         <p>Drop-in replacement. Switch with one config change. Same protocol, same client libraries.</p>
     </div>

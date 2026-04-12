@@ -62,6 +62,11 @@
         .prose code{font-family:var(--mono);font-size:12px;background:var(--elevated);padding:2px 6px;border-radius:4px;color:var(--accent-l)}
         .prose pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:16px 20px;overflow-x:auto;margin:0 0 16px;position:relative}
         .prose pre code{background:none;padding:0;font-size:12px;line-height:1.7;color:var(--t2)}
+        .prose pre code.hljs{background:none;padding:0}
+        .code-header{position:absolute;top:8px;right:10px;display:flex;align-items:center;gap:8px;z-index:2}
+        .code-lang-badge{font-family:var(--mono);font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--t3);padding:2px 6px;border-radius:3px;background:rgba(255,255,255,0.04)}
+        .code-copy{padding:3px 10px;border-radius:5px;font-size:11px;font-weight:500;color:var(--t3);background:rgba(255,255,255,0.04);border:1px solid var(--border);cursor:pointer;font-family:var(--sans);transition:all 150ms}
+        .code-copy:hover{color:var(--t2);border-color:var(--t3)}
         .prose table{width:100%;border-collapse:collapse;margin:0 0 16px;font-size:13px}
         .prose th{text-align:left;padding:10px 14px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--t3);border-bottom:1px solid var(--border)}
         .prose td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--t2)}
@@ -102,6 +107,8 @@
 
         @media(max-width:768px){.docs-sidebar{display:none}.docs-content{padding:20px 16px}}
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -131,7 +138,7 @@
             <a href="{{ route('docs.os.configuration') }}" class="ds-link {{ request()->routeIs('docs.os.configuration') ? 'active' : '' }}">Configuration</a>
             <a href="{{ route('docs.os.api-reference') }}" class="ds-link {{ request()->routeIs('docs.os.api-reference') ? 'active' : '' }}">API Reference</a>
             <a href="{{ route('docs.os.sdks') }}" class="ds-link {{ request()->routeIs('docs.os.sdks') ? 'active' : '' }}">SDKs</a>
-            <div class="ds-section">Cloud <span class="ds-badge">CLOUD</span></div>
+            <div class="ds-section">Cloud</div>
             <a href="{{ route('docs.cloud.getting-started') }}" class="ds-link {{ request()->routeIs('docs.cloud.getting-started') ? 'active' : '' }}">Getting Started</a>
             <a href="{{ route('docs.cloud.projects') }}" class="ds-link {{ request()->routeIs('docs.cloud.projects') ? 'active' : '' }}">Projects</a>
             <a href="{{ route('docs.cloud.billing') }}" class="ds-link {{ request()->routeIs('docs.cloud.billing') ? 'active' : '' }}">Billing</a>
@@ -163,6 +170,24 @@
         document.querySelector('[data-tab-group="'+group+'"][data-tab="'+name+'"]').classList.add('active');
         btn.classList.add('active');
     }
+    document.addEventListener('DOMContentLoaded',()=>{
+        const nameMap={bash:'bash',shell:'bash',php:'php',javascript:'js',js:'js',json:'json',yaml:'yaml',yml:'yaml',ruby:'ruby',python:'python',html:'html',xml:'xml',css:'css',sql:'sql',ini:'env',dockerfile:'docker'};
+        document.querySelectorAll('pre code').forEach(el=>{
+            hljs.highlightElement(el);
+            const pre=el.closest('pre');
+            if(!pre||pre.querySelector('.code-header'))return;
+            let lang='';
+            const m=el.className.match(/language-(\w+)/);
+            if(m)lang=nameMap[m[1]]||m[1];
+            if(!lang&&el.result&&el.result.language)lang=nameMap[el.result.language]||el.result.language;
+            if(!lang){const cls=Array.from(el.classList).find(c=>c.startsWith('hljs')&&c!=='hljs');if(cls)lang='';}
+            const hdr=document.createElement('div');hdr.className='code-header';
+            if(lang){const badge=document.createElement('span');badge.className='code-lang-badge';badge.textContent=lang;hdr.appendChild(badge);}
+            const btn=document.createElement('button');btn.className='code-copy';btn.textContent='Copy';
+            btn.onclick=()=>{navigator.clipboard.writeText(el.textContent);btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',1500);};
+            hdr.appendChild(btn);pre.appendChild(hdr);
+        });
+    });
     </script>
 </body>
 </html>
