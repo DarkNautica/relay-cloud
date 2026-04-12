@@ -17,6 +17,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
     Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
     Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
+    Route::post('/projects/{project}/pause', [ProjectController::class, 'pause'])->name('projects.pause');
+    Route::post('/projects/{project}/resume', [ProjectController::class, 'resume'])->name('projects.resume');
     Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
     Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 

@@ -61,6 +61,30 @@ class ProjectController extends Controller
         return view('projects.show', compact('project', 'liveStats', 'eventLog'));
     }
 
+    public function pause(Request $request, Project $project, AppRegistryService $registry)
+    {
+        if ($project->user_id !== $request->user()->id) {
+            abort(403);
+        }
+
+        $project->update(['is_active' => false]);
+        $registry->syncToServer();
+
+        return response()->json(['status' => 'paused']);
+    }
+
+    public function resume(Request $request, Project $project, AppRegistryService $registry)
+    {
+        if ($project->user_id !== $request->user()->id) {
+            abort(403);
+        }
+
+        $project->update(['is_active' => true]);
+        $registry->syncToServer();
+
+        return response()->json(['status' => 'active']);
+    }
+
     public function destroy(Request $request, Project $project, AppRegistryService $registry)
     {
         if ($project->user_id !== $request->user()->id) {

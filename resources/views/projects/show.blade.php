@@ -1,124 +1,104 @@
 @extends('layouts.app')
-
-@section('header', $project->name)
+@section('breadcrumb', 'Projects / ' . $project->name)
 
 @section('content')
-<style>
-    @keyframes pulse-green { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: pulse-green 2s ease-in-out infinite; display: inline-block; }
-</style>
-
 <div class="page-header">
     <div>
-        <div style="display:flex; align-items:center; gap:12px;">
+        <div style="display:flex;align-items:center;gap:10px;">
             <h1 class="page-title">{{ $project->name }}</h1>
-            @if($project->is_active)
-                <span class="badge badge-active"><span class="badge-dot"></span>Active</span>
-            @else
-                <span class="badge badge-inactive"><span class="badge-dot"></span>Inactive</span>
-            @endif
+            <span class="badge {{ $project->is_active ? 'badge-active' : 'badge-inactive' }}">
+                <span class="badge-dot"></span>{{ $project->is_active ? 'Active' : 'Inactive' }}
+            </span>
         </div>
-        <p class="page-subtitle">Manage credentials and settings for this project.</p>
+        <p class="page-sub">Manage credentials and monitor this project.</p>
     </div>
-    <a href="{{ route('projects.index') }}" class="btn btn-secondary btn-sm">Back to Projects</a>
+    <a href="{{ route('projects.index') }}" class="btn btn-secondary btn-sm">Back</a>
 </div>
 
 <!-- Live Stats -->
-<div class="stats-row">
+<div class="stats-grid" style="grid-template-columns:repeat(3,1fr);">
     <div class="stat-card">
-        <div class="stat-label" style="display:flex;align-items:center;gap:8px;">
-            <span class="live-dot"></span> Active Subscribers
+        <div class="stat-top">
+            <div class="stat-label">Subscribers</div>
+            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         </div>
-        <div class="stat-value" id="live-subscribers">{{ $liveStats['subscriber_count'] }}</div>
+        <div class="stat-value" id="live-subs">{{ $liveStats['subscriber_count'] }}</div>
     </div>
     <div class="stat-card">
-        <div class="stat-label" style="display:flex;align-items:center;gap:8px;">
-            <span class="live-dot"></span> Active Channels
+        <div class="stat-top">
+            <div class="stat-label">Channels</div>
+            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
         </div>
-        <div class="stat-value" id="live-channels">{{ $liveStats['channels'] }}</div>
+        <div class="stat-value" id="live-chan">{{ $liveStats['channels'] }}</div>
     </div>
     <div class="stat-card">
-        <div class="stat-label">Max Connections</div>
+        <div class="stat-top">
+            <div class="stat-label">Max Connections</div>
+            <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+        </div>
         <div class="stat-value">{{ number_format($project->max_connections) }}</div>
     </div>
 </div>
 
 <!-- Credentials -->
-<div class="card" style="margin-bottom: 20px;">
-    <div class="card-header">
-        <h2 class="card-title">API Credentials</h2>
-    </div>
-
-    <div class="cred-row">
-        <div style="flex:1; min-width:0;">
-            <div class="cred-label">App ID</div>
-            <div class="cred-value">{{ $project->app_id }}</div>
-        </div>
-        <div class="cred-actions">
-            <button class="icon-btn" onclick="copyToClipboard('{{ $project->app_id }}')" title="Copy">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+<div class="card" style="margin-bottom:16px;">
+    <div class="card-header"><span class="card-title">API Credentials</span></div>
+    <div style="padding:16px 24px;">
+        <div class="cred-row">
+            <div class="cred-info">
+                <div class="cred-label">App ID</div>
+                <div class="cred-value">{{ $project->app_id }}</div>
+            </div>
+            <button class="icon-btn" onclick="copyToClipboard('{{ $project->app_id }}',this)" style="position:relative;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span class="tooltip">Copied!</span>
             </button>
         </div>
-    </div>
-
-    <div class="cred-row">
-        <div style="flex:1; min-width:0;">
-            <div class="cred-label">App Key</div>
-            <div class="cred-value">{{ $project->app_key }}</div>
-        </div>
-        <div class="cred-actions">
-            <button class="icon-btn" onclick="copyToClipboard('{{ $project->app_key }}')" title="Copy">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <div class="cred-row">
+            <div class="cred-info">
+                <div class="cred-label">App Key</div>
+                <div class="cred-value">{{ $project->app_key }}</div>
+            </div>
+            <button class="icon-btn" onclick="copyToClipboard('{{ $project->app_key }}',this)" style="position:relative;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span class="tooltip">Copied!</span>
             </button>
         </div>
-    </div>
-
-    <div class="cred-row">
-        <div style="flex:1; min-width:0;">
-            <div class="cred-label">App Secret</div>
-            <div class="cred-value cred-blurred" id="secret-value">{{ $project->app_secret }}</div>
-        </div>
-        <div class="cred-actions">
-            <button class="icon-btn" onclick="toggleSecret()" title="Reveal">
+        <div class="cred-row">
+            <div class="cred-info">
+                <div class="cred-label">App Secret</div>
+                <div class="cred-value cred-blurred" id="secret-value">{{ $project->app_secret }}</div>
+            </div>
+            <button class="icon-btn" onclick="toggleSecret()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
-            <button class="icon-btn" onclick="copyToClipboard('{{ $project->app_secret }}')" title="Copy">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <button class="icon-btn" onclick="copyToClipboard('{{ $project->app_secret }}',this)" style="position:relative;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span class="tooltip">Copied!</span>
             </button>
         </div>
-    </div>
-</div>
-
-<!-- Connection String -->
-<div class="card" style="margin-bottom: 20px;">
-    <div class="card-header">
-        <h2 class="card-title">Connection</h2>
-    </div>
-    <div class="cred-row">
-        <div style="flex:1; min-width:0;">
-            <div class="cred-label">WebSocket URL</div>
-            <div class="cred-value">wss://ws.relaycloud.dev/app/{{ $project->app_key }}</div>
-        </div>
-        <div class="cred-actions">
-            <button class="icon-btn" onclick="copyToClipboard('wss://ws.relaycloud.dev/app/{{ $project->app_key }}')" title="Copy">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <div class="cred-row" style="margin-bottom:0;">
+            <div class="cred-info">
+                <div class="cred-label">WebSocket URL</div>
+                <div class="cred-value">wss://ws.relaycloud.dev/app/{{ $project->app_key }}</div>
+            </div>
+            <button class="icon-btn" onclick="copyToClipboard('wss://ws.relaycloud.dev/app/{{ $project->app_key }}',this)" style="position:relative;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span class="tooltip">Copied!</span>
             </button>
         </div>
     </div>
 </div>
 
 <!-- Quick Start -->
-<div class="card" style="margin-bottom: 20px;">
-    <div class="card-header">
-        <h2 class="card-title">Quick Start</h2>
-    </div>
+<div class="card" style="margin-bottom:16px;">
+    <div class="card-header"><span class="card-title">Quick Start</span></div>
     <div class="code-tabs">
-        <button class="code-tab active" onclick="showTab('laravel', this)">Laravel</button>
-        <button class="code-tab" onclick="showTab('node', this)">Node.js</button>
-        <button class="code-tab" onclick="showTab('javascript', this)">JavaScript</button>
+        <button class="code-tab active" onclick="showTab('laravel',this)">Laravel</button>
+        <button class="code-tab" onclick="showTab('node',this)">Node.js</button>
+        <button class="code-tab" onclick="showTab('js',this)">JavaScript</button>
     </div>
-    <div class="code-block" id="tab-laravel">
-        <pre>// config/broadcasting.php
+    <div class="code-block" id="tab-laravel"><span class="code-lang">PHP</span><pre>// config/broadcasting.php
 'relay' => [
     'driver' => 'pusher',
     'key' => '{{ $project->app_key }}',
@@ -129,10 +109,8 @@
         'port' => 443,
         'scheme' => 'https',
     ],
-],</pre>
-    </div>
-    <div class="code-block" id="tab-node" style="display:none;">
-        <pre>import Pusher from 'pusher';
+],</pre></div>
+    <div class="code-block" id="tab-node" style="display:none;"><span class="code-lang">Node</span><pre>import Pusher from 'pusher';
 
 const pusher = new Pusher({
     appId: '{{ $project->app_id }}',
@@ -145,10 +123,8 @@ const pusher = new Pusher({
 
 pusher.trigger('my-channel', 'my-event', {
     message: 'Hello from Relay!'
-});</pre>
-    </div>
-    <div class="code-block" id="tab-javascript" style="display:none;">
-        <pre>import Echo from 'laravel-echo';
+});</pre></div>
+    <div class="code-block" id="tab-js" style="display:none;"><span class="code-lang">JS</span><pre>import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
 window.Pusher = Pusher;
@@ -163,88 +139,63 @@ const echo = new Echo({
 });
 
 echo.channel('my-channel')
-    .listen('my-event', (e) => {
-        console.log(e);
-    });</pre>
-    </div>
+    .listen('my-event', (e) => console.log(e));</pre></div>
 </div>
 
-<!-- Live Event Log -->
-<div class="card" style="margin-bottom: 20px;">
+<!-- Event Log -->
+<div class="card" style="margin-bottom:16px;">
     <div class="card-header">
-        <h2 class="card-title" style="display:flex;align-items:center;gap:10px;">
-            <span class="live-dot"></span> Live Event Log
-        </h2>
-        <span style="font-size:12px;color:var(--text-muted);">Auto-refreshes every 5s</span>
+        <span class="card-title" style="display:flex;align-items:center;gap:8px;">
+            <span class="status-dot online" style="width:5px;height:5px;"></span> Live Event Log
+        </span>
+        <span style="font-size:11px;color:var(--text-tertiary);">Auto-refreshes 5s</span>
     </div>
-    <div class="table-wrap" id="event-log-wrap">
-        @if(empty($eventLog))
-            <div class="empty-state" style="padding: 40px 20px;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                <h3>No events yet</h3>
-                <p>Events will appear here when clients connect and send messages.</p>
-            </div>
-        @else
+    @if(empty($eventLog))
+        <div class="empty-state" style="padding:36px 20px;">
+            <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            <h3>No events yet</h3>
+            <p>Events appear here when clients connect and send messages.</p>
+        </div>
+    @else
+        <div style="overflow-x:auto;">
             <table>
-                <thead>
-                    <tr>
-                        <th>Timestamp</th>
-                        <th>Channel</th>
-                        <th>Event</th>
+                <thead><tr><th>Timestamp</th><th>Channel</th><th>Event</th></tr></thead>
+                <tbody>
+                @foreach($eventLog as $event)
+                    <tr style="cursor:default;">
+                        <td style="font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);">{{ $event['timestamp'] ?? '-' }}</td>
+                        <td style="font-family:var(--font-mono);font-size:12px;">{{ $event['channel'] ?? '-' }}</td>
+                        <td>{{ $event['event'] ?? '-' }}</td>
                     </tr>
-                </thead>
-                <tbody id="event-log-body">
-                    @foreach($eventLog as $event)
-                    <tr>
-                        <td style="color:var(--text-muted);font-size:13px;">{{ $event['timestamp'] ?? '—' }}</td>
-                        <td><code style="font-size:12px;">{{ $event['channel'] ?? '—' }}</code></td>
-                        <td>{{ $event['event'] ?? '—' }}</td>
-                    </tr>
-                    @endforeach
+                @endforeach
                 </tbody>
             </table>
-        @endif
-    </div>
+        </div>
+    @endif
 </div>
 
 <!-- Danger Zone -->
 <div class="danger-zone">
     <h3>Danger Zone</h3>
-    <p>Deleting this project will permanently revoke all API credentials. This action cannot be undone.</p>
-    <form method="POST" action="{{ route('projects.destroy', $project) }}" onsubmit="return confirm('Are you sure you want to delete this project? This cannot be undone.')">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-danger">Delete Project</button>
+    <p>Permanently delete this project and revoke all API credentials.</p>
+    <form method="POST" action="{{ route('projects.destroy', $project) }}" onsubmit="return confirm('Delete this project? This cannot be undone.')">
+        @csrf @method('DELETE')
+        <button type="submit" class="btn btn-danger btn-sm">Delete Project</button>
     </form>
 </div>
 
 <script>
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text);
+function showTab(t,btn){
+    document.querySelectorAll('.code-block').forEach(e=>e.style.display='none');
+    document.querySelectorAll('.code-tab').forEach(e=>e.classList.remove('active'));
+    document.getElementById('tab-'+t).style.display='block'; btn.classList.add('active');
 }
-
-function toggleSecret() {
-    document.getElementById('secret-value').classList.toggle('cred-blurred');
-}
-
-function showTab(tab, btn) {
-    document.querySelectorAll('.code-block').forEach(el => el.style.display = 'none');
-    document.querySelectorAll('.code-tab').forEach(el => el.classList.remove('active'));
-    document.getElementById('tab-' + tab).style.display = 'block';
-    btn.classList.add('active');
-}
-
-setInterval(async () => {
-    try {
-        const res = await fetch('/api/dashboard/stats', { credentials: 'same-origin' });
-        if (!res.ok) return;
-        const data = await res.json();
-        const ps = data.projects[{{ $project->id }}];
-        if (ps) {
-            document.getElementById('live-subscribers').textContent = Number(ps.subscriber_count).toLocaleString();
-            document.getElementById('live-channels').textContent = Number(ps.channels).toLocaleString();
-        }
-    } catch (e) {}
-}, 5000);
+setInterval(async()=>{
+    try{
+        const r=await fetch('/api/dashboard/stats',{credentials:'same-origin'});
+        if(!r.ok)return; const d=await r.json(), ps=d.projects[{{ $project->id }}];
+        if(ps){document.getElementById('live-subs').textContent=ps.subscriber_count;document.getElementById('live-chan').textContent=ps.channels;}
+    }catch(e){}
+},5000);
 </script>
 @endsection
