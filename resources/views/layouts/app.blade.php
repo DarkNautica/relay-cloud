@@ -310,7 +310,7 @@
         <header class="top-bar">
             <div class="top-bar-left">@yield('header', 'Dashboard')</div>
             <div class="top-bar-right">
-                <span class="plan-badge">{{ Auth::user()->plan }} plan</span>
+                <span class="plan-badge">{{ Auth::user()->fresh()->plan ?? 'hobby' }} plan</span>
                 <span class="user-name">{{ Auth::user()->name }}</span>
             </div>
         </header>

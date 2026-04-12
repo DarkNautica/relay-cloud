@@ -10,16 +10,17 @@ class DashboardController extends Controller
 {
     public function index(Request $request, PlanService $planService, RelayServerService $relay)
     {
-        $user = $request->user();
+        $user = auth()->user()->fresh();
+        $currentPlan = $user->plan ?? 'hobby';
         $projects = $user->projects()->latest()->get();
         $totalConnections = $projects->sum('max_connections');
-        $planName = $planService->getUserPlanName($user);
+        $planName = PlanService::getPlan($currentPlan)['name'];
 
         $serverOnline = $relay->isServerOnline();
         $serverStats = $relay->getServerStats();
 
         return view('dashboard', compact(
-            'projects', 'totalConnections', 'planName',
+            'projects', 'totalConnections', 'planName', 'currentPlan',
             'serverOnline', 'serverStats'
         ));
     }

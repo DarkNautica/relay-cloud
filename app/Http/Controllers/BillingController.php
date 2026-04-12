@@ -7,16 +7,21 @@ use Illuminate\Http\Request;
 
 class BillingController extends Controller
 {
-    public function index(Request $request, PlanService $planService)
+    public function index(Request $request)
     {
-        $user = $request->user();
-        $currentPlan = $planService->getActivePlan($user);
+        $user = auth()->user()->fresh();
+        $currentPlan = $user->plan ?? 'hobby';
         $plans = PlanService::PLANS;
         $projectCount = $user->projects()->count();
         $totalConnections = $user->projects()->sum('max_connections');
         $isSubscribed = $user->subscribed('default');
+        $maxConnections = PlanService::getPlan($currentPlan)['max_connections'];
+        $maxProjects = PlanService::getPlan($currentPlan)['max_projects'];
 
-        return view('billing.index', compact('currentPlan', 'plans', 'projectCount', 'totalConnections', 'isSubscribed'));
+        return view('billing.index', compact(
+            'currentPlan', 'plans', 'projectCount', 'totalConnections',
+            'isSubscribed', 'maxConnections', 'maxProjects'
+        ));
     }
 
     public function checkout(Request $request, string $plan)

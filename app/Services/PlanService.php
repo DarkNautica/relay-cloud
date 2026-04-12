@@ -30,41 +30,28 @@ class PlanService
         ],
     ];
 
-    public function getActivePlan(User $user): string
-    {
-        if ($user->plan !== 'hobby' && $user->subscribed('default')) {
-            return $user->plan;
-        }
-
-        if ($user->plan !== 'hobby' && ! $user->subscribed('default')) {
-            return 'hobby';
-        }
-
-        return $user->plan;
-    }
-
-    public function getPlan(string $plan): array
+    public static function getPlan(string $plan): array
     {
         return self::PLANS[$plan] ?? self::PLANS['hobby'];
     }
 
     public function getLimit(User $user, string $limit): int
     {
-        $activePlan = $this->getActivePlan($user);
-        $plan = $this->getPlan($activePlan);
+        $plan = self::getPlan($user->fresh()->plan ?? 'hobby');
 
         return $plan[$limit] ?? 0;
     }
 
     public function canCreateProject(User $user): bool
     {
-        $maxProjects = $this->getLimit($user, 'max_projects');
+        $freshUser = $user->fresh();
+        $maxProjects = self::getPlan($freshUser->plan ?? 'hobby')['max_projects'];
 
-        return $user->projects()->count() < $maxProjects;
+        return $freshUser->projects()->count() < $maxProjects;
     }
 
     public function getUserPlanName(User $user): string
     {
-        return $this->getPlan($this->getActivePlan($user))['name'];
+        return self::getPlan($user->fresh()->plan ?? 'hobby')['name'];
     }
 }

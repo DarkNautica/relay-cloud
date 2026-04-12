@@ -34,21 +34,20 @@
         <div>
             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
                 <span style="color:var(--text-muted)">Projects</span>
-                <span>{{ $projectCount }} / {{ $plans[$currentPlan]['max_projects'] }}</span>
+                <span>{{ $projectCount }} / {{ $maxProjects }}</span>
             </div>
             <div class="progress-bar">
-                <div class="progress-fill" style="width: {{ $plans[$currentPlan]['max_projects'] > 0 ? min(100, ($projectCount / $plans[$currentPlan]['max_projects']) * 100) : 0 }}%"></div>
+                <div class="progress-fill" style="width: {{ $maxProjects > 0 ? min(100, ($projectCount / $maxProjects) * 100) : 0 }}%"></div>
             </div>
         </div>
         <div>
             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
                 <span style="color:var(--text-muted)">Max Connections</span>
-                <span>{{ number_format($totalConnections) }} / {{ $plans[$currentPlan]['max_connections'] == -1 ? 'Unlimited' : number_format($plans[$currentPlan]['max_connections']) }}</span>
+                <span>{{ number_format($totalConnections) }} / {{ $maxConnections == -1 ? 'Unlimited' : number_format($maxConnections) }}</span>
             </div>
             <div class="progress-bar">
                 @php
-                    $maxConn = $plans[$currentPlan]['max_connections'];
-                    $connPercent = $maxConn > 0 ? min(100, ($totalConnections / $maxConn) * 100) : 0;
+                    $connPercent = $maxConnections > 0 ? min(100, ($totalConnections / $maxConnections) * 100) : 0;
                 @endphp
                 <div class="progress-fill" style="width: {{ $connPercent }}%"></div>
             </div>

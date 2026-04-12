@@ -29,7 +29,7 @@ class ProjectController extends Controller
 
     public function store(Request $request, PlanService $planService, AppRegistryService $registry)
     {
-        $user = $request->user();
+        $user = auth()->user()->fresh();
 
         if (! $planService->canCreateProject($user)) {
             return back()->with('error', 'You have reached your plan\'s project limit. Please upgrade to create more projects.');
