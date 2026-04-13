@@ -64,6 +64,11 @@ class DocsController extends Controller
         return view('docs.guides.node');
     }
 
+    public function pusherSdks()
+    {
+        return view('docs.guides.pusher-sdks');
+    }
+
     public function vsReverb()
     {
         return view('docs.vs-reverb');

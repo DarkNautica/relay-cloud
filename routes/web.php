@@ -29,6 +29,7 @@ Route::get('/docs/guides/nextjs', [DocsController::class, 'nextjs'])->name('docs
 Route::get('/docs/guides/rails', [DocsController::class, 'rails'])->name('docs.guides.rails');
 Route::get('/docs/guides/django', [DocsController::class, 'django'])->name('docs.guides.django');
 Route::get('/docs/guides/node', [DocsController::class, 'node'])->name('docs.guides.node');
+Route::get('/docs/guides/pusher-sdks', [DocsController::class, 'pusherSdks'])->name('docs.guides.pusher-sdks');
 Route::get('/docs/vs-reverb', [DocsController::class, 'vsReverb'])->name('docs.vs-reverb');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');

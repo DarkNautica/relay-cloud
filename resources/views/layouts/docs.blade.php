@@ -144,6 +144,7 @@
             <a href="{{ route('docs.guides.rails') }}" class="ds-link {{ request()->routeIs('docs.guides.rails') ? 'active' : '' }}">Rails</a>
             <a href="{{ route('docs.guides.django') }}" class="ds-link {{ request()->routeIs('docs.guides.django') ? 'active' : '' }}">Django</a>
             <a href="{{ route('docs.guides.node') }}" class="ds-link {{ request()->routeIs('docs.guides.node') ? 'active' : '' }}">Node.js</a>
+            <a href="{{ route('docs.guides.pusher-sdks') }}" class="ds-link {{ request()->routeIs('docs.guides.pusher-sdks') ? 'active' : '' }}">All Pusher SDKs</a>
             <div class="ds-section">Cloud</div>
             <a href="{{ route('docs.cloud.getting-started') }}" class="ds-link {{ request()->routeIs('docs.cloud.getting-started') ? 'active' : '' }}">Getting Started</a>
             <a href="{{ route('docs.cloud.projects') }}" class="ds-link {{ request()->routeIs('docs.cloud.projects') ? 'active' : '' }}">Projects</a>
