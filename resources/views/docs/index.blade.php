@@ -96,7 +96,7 @@
     <div class="hub-card" style="margin-top:16px;">
         <svg class="hub-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
         <h2 style="font-size:18px;font-weight:700;margin-bottom:4px;">Framework Guides</h2>
-        <p style="font-size:13px;color:var(--t2);margin-bottom:12px;">Step-by-step quickstarts for popular frameworks beyond Laravel.</p>
+        <p style="font-size:13px;color:var(--t2);margin-bottom:12px;">Step-by-step quickstarts for popular frameworks.</p>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
             <a href="{{ route('docs.guides.nextjs') }}" class="hub-link">
                 <span class="hub-link-title">Next.js</span>

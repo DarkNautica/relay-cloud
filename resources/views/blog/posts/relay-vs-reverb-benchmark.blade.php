@@ -68,8 +68,8 @@
     <p style="font-size:14px;line-height:1.6;color:var(--t2);margin-bottom:8px;"><strong style="color:var(--t1);">Choose Relay if:</strong></p>
     <ul style="font-size:14px;line-height:1.8;color:var(--t2);margin:0 0 24px 20px;">
         <li>You want better resource efficiency at scale</li>
-        <li>You are on a polyglot stack (Next.js, Rails, Django, Node)</li>
-        <li>You want a managed cloud option without vendor lock-in</li>
+        <li>You want a standalone server with no PHP or Laravel runtime dependency</li>
+        <li>You want a managed cloud option with an open source exit ramp to self-hosting</li>
         <li>You want a Channel Inspector built into your dashboard</li>
         <li>You want to self-host with the option to migrate to managed hosting without changing any application code</li>
     </ul>
