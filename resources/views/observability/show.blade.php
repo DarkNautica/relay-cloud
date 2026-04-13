@@ -122,18 +122,22 @@
         const ts = ev.timestamp ? new Date(ev.timestamp) : new Date();
         const timeStr = ts.toLocaleTimeString('en-US', {hour12:false}) + '.' + String(ts.getMilliseconds()).padStart(3,'0');
 
-        const latency = ev.latency_ms ?? ev.latency ?? null;
+        let latency = ev.latency_ms ?? ev.latency ?? ev.duration_ms ?? null;
+        // If latency came in microseconds, convert
+        if (latency === null && ev.latency_us != null) latency = Math.round(ev.latency_us / 1000);
         let latencyColor = 'var(--text-tertiary)';
         let latencyText = '—';
-        if (latency !== null) {
+        if (latency !== null && latency !== undefined) {
             latencyText = latency + 'ms';
             if (latency < 20) latencyColor = 'var(--success)';
             else if (latency <= 100) latencyColor = 'var(--warning)';
             else latencyColor = 'var(--danger)';
         }
 
-        const delivered = ev.delivered_count ?? ev.subscribers ?? null;
-        const deliveredText = delivered !== null ? delivered + ' client' + (delivered !== 1 ? 's' : '') : '—';
+        let delivered = ev.delivered_count ?? ev.subscribers ?? ev.subscriber_count ?? ev.delivery_count ?? ev.num_recipients ?? null;
+        // Also check inside a nested deliveries/stats object
+        if (delivered === null && ev.stats) delivered = ev.stats.delivered ?? ev.stats.recipients ?? null;
+        const deliveredText = delivered !== null && delivered !== undefined ? delivered + ' client' + (delivered !== 1 ? 's' : '') : '—';
 
         tr.innerHTML =
             '<td style="font-family:var(--font-mono);font-size:12px;color:var(--text-tertiary);">' + esc(timeStr) + '</td>' +
@@ -155,8 +159,13 @@
 
         let payloadStr = '';
         try {
-            const d = typeof ev.data === 'string' ? JSON.parse(ev.data) : ev.data;
-            payloadStr = JSON.stringify(d, null, 2);
+            let payload = ev.data || '';
+            let parsed = typeof payload === 'string' ? JSON.parse(payload) : payload;
+            // Double-encoded: relay server sends JSON-encoded string inside JSON response
+            if (typeof parsed === 'string') {
+                parsed = JSON.parse(parsed);
+            }
+            payloadStr = JSON.stringify(parsed, null, 2);
         } catch(e) {
             payloadStr = typeof ev.data === 'string' ? ev.data : JSON.stringify(ev.data);
         }
