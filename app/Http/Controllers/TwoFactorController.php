@@ -83,6 +83,8 @@ class TwoFactorController extends Controller
 
         ActivityService::log($user, 'two_factor.enabled', 'Two-factor authentication enabled');
 
+        session(['two_factor_verified' => true]);
+
         return redirect()->route('settings')->with('success', 'Two-factor authentication has been enabled.');
     }
 
