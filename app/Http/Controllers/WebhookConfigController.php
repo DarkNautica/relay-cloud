@@ -89,4 +89,62 @@ class WebhookConfigController extends Controller
             return back()->with('error', 'Failed to reach webhook URL: ' . $e->getMessage());
         }
     }
+
+    public function pause(Request $request, UserWebhook $webhook)
+    {
+        if ($webhook->user_id !== $request->user()->id) {
+            abort(403);
+        }
+
+        $webhook->update(['is_paused' => true]);
+
+        ActivityService::log($request->user(), 'webhook.paused', 'Manually paused webhook: ' . $webhook->url, [
+            'webhook_id' => $webhook->id,
+        ]);
+
+        return back()->with('success', 'Webhook paused.');
+    }
+
+    public function resume(Request $request, UserWebhook $webhook)
+    {
+        if ($webhook->user_id !== $request->user()->id) {
+            abort(403);
+        }
+
+        $webhook->update([
+            'is_paused' => false,
+            'failure_count' => 0,
+        ]);
+
+        ActivityService::log($request->user(), 'webhook.resumed', 'Resumed webhook: ' . $webhook->url, [
+            'webhook_id' => $webhook->id,
+        ]);
+
+        return back()->with('success', 'Webhook resumed.');
+    }
+
+    public function deliveries(Request $request, UserWebhook $webhook)
+    {
+        if ($webhook->user_id !== $request->user()->id) {
+            abort(403);
+        }
+
+        $deliveries = $webhook->deliveries()
+            ->latest()
+            ->take(5)
+            ->get()
+            ->map(fn ($d) => [
+                'id' => $d->id,
+                'event' => $d->event,
+                'status' => $d->status,
+                'response_status' => $d->response_status,
+                'attempt' => $d->attempt,
+                'payload' => $d->payload,
+                'response_body' => $d->response_body,
+                'created_at' => $d->created_at->toIso8601String(),
+                'delivered_at' => $d->delivered_at?->toIso8601String(),
+            ]);
+
+        return response()->json($deliveries);
+    }
 }

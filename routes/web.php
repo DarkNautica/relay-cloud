@@ -6,6 +6,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocsController;
 use App\Http\Controllers\MarketingController;
+use App\Http\Controllers\PlaygroundController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SettingsController;
@@ -35,6 +36,8 @@ Route::get('/docs/guides/pusher-sdks', [DocsController::class, 'pusherSdks'])->n
 Route::get('/docs/vs-reverb', [DocsController::class, 'vsReverb'])->name('docs.vs-reverb');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
+Route::get('/playground', [PlaygroundController::class, 'index'])->name('playground');
+Route::post('/playground/publish', [PlaygroundController::class, 'publish'])->name('playground.publish');
 
 // Authenticated dashboard
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -61,6 +64,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/webhooks', [WebhookConfigController::class, 'store'])->name('webhooks.store');
     Route::delete('/webhooks/{webhook}', [WebhookConfigController::class, 'destroy'])->name('webhooks.destroy');
     Route::post('/webhooks/{webhook}/test', [WebhookConfigController::class, 'test'])->name('webhooks.test');
+    Route::post('/webhooks/{webhook}/pause', [WebhookConfigController::class, 'pause'])->name('webhooks.pause');
+    Route::post('/webhooks/{webhook}/resume', [WebhookConfigController::class, 'resume'])->name('webhooks.resume');
+    Route::get('/webhooks/{webhook}/deliveries', [WebhookConfigController::class, 'deliveries'])->name('webhooks.deliveries');
 
     Route::get('/billing', [BillingController::class, 'index'])->name('billing.index');
     Route::post('/billing/checkout/{plan}', [BillingController::class, 'checkout'])->name('billing.checkout');

@@ -119,6 +119,7 @@
             </a>
             <div class="nav-links">
                 <a href="{{ route('docs') }}" class="{{ request()->is('docs*') ? 'active' : '' }}">Docs</a>
+                <a href="{{ route('playground') }}" class="{{ request()->is('playground*') ? 'active' : '' }}">Playground</a>
                 <a href="{{ route('blog') }}" class="{{ request()->is('blog*') ? 'active' : '' }}">Blog</a>
                 <a href="https://github.com/DarkNautica/Relay" target="_blank">GitHub</a>
             </div>

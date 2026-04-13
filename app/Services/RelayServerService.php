@@ -144,6 +144,23 @@ class RelayServerService
         return ['events' => [], 'next_cursor' => null];
     }
 
+    public function publishEvent(string $appId, string $appSecret, string $channel, string $event, array $data): bool
+    {
+        try {
+            $response = Http::timeout(3)
+                ->withToken($appSecret)
+                ->post("{$this->baseUrl}/apps/{$appId}/events", [
+                    'event' => $event,
+                    'channel' => $channel,
+                    'data' => json_encode($data),
+                ]);
+
+            return $response->successful();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public function isServerOnline(): bool
     {
         try {
