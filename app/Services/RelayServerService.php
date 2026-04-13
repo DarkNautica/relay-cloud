@@ -144,6 +144,81 @@ class RelayServerService
         return ['events' => [], 'next_cursor' => null];
     }
 
+    public function getProjectEvents(Project $project, int $limit = 25, ?string $cursor = null, ?string $channel = null): array
+    {
+        try {
+            $query = ['limit' => $limit];
+            if ($cursor) {
+                $query['cursor'] = $cursor;
+            }
+            if ($channel) {
+                $query['channel'] = $channel;
+            }
+
+            $response = Http::timeout(2)
+                ->withToken($project->app_secret)
+                ->get("{$this->baseUrl}/apps/{$project->app_id}/events", $query);
+
+            if ($response->successful()) {
+                return [
+                    'events' => $response->json('events') ?? [],
+                    'next_cursor' => $response->json('next_cursor'),
+                ];
+            }
+        } catch (\Exception $e) {
+            //
+        }
+
+        return ['events' => [], 'next_cursor' => null];
+    }
+
+    public function getEventDetail(Project $project, string $eventId): ?array
+    {
+        try {
+            $response = Http::timeout(2)
+                ->withToken($project->app_secret)
+                ->get("{$this->baseUrl}/apps/{$project->app_id}/events/{$eventId}");
+
+            if ($response->successful()) {
+                return $response->json();
+            }
+        } catch (\Exception $e) {
+            //
+        }
+
+        return null;
+    }
+
+    public function replayEvent(Project $project, string $eventId): bool
+    {
+        try {
+            $response = Http::timeout(3)
+                ->withToken($project->app_secret)
+                ->post("{$this->baseUrl}/apps/{$project->app_id}/events/{$eventId}/replay");
+
+            return $response->successful();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getProjectMetrics(Project $project): array
+    {
+        try {
+            $response = Http::timeout(2)
+                ->withToken($project->app_secret)
+                ->get("{$this->baseUrl}/apps/{$project->app_id}/metrics");
+
+            if ($response->successful()) {
+                return $response->json() ?? [];
+            }
+        } catch (\Exception $e) {
+            //
+        }
+
+        return [];
+    }
+
     public function publishEvent(string $appId, string $appSecret, string $channel, string $event, array $data): bool
     {
         try {

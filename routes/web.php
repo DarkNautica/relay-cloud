@@ -6,6 +6,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocsController;
 use App\Http\Controllers\MarketingController;
+use App\Http\Controllers\ObservabilityController;
 use App\Http\Controllers\PlaygroundController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
@@ -55,6 +56,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/projects/{project}/inspector', [InspectorController::class, 'show'])->name('inspector.show');
     Route::get('/projects/{project}/inspector/channels', [InspectorController::class, 'channels'])->name('inspector.channels');
     Route::get('/projects/{project}/inspector/events/{channel}', [InspectorController::class, 'events'])->name('inspector.events');
+    Route::get('/projects/{project}/observability', [ObservabilityController::class, 'show'])->name('observability.show');
+    Route::get('/projects/{project}/observability/events', [ObservabilityController::class, 'events'])->name('observability.events');
+    Route::get('/projects/{project}/observability/events/{eventId}', [ObservabilityController::class, 'event'])->name('observability.event');
+    Route::post('/projects/{project}/observability/events/{eventId}/replay', [ObservabilityController::class, 'replay'])->name('observability.replay');
     Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 
     Route::get('/usage', [UsageController::class, 'index'])->name('usage');
