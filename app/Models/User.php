@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Notifications\VerifyEmailNotification;
+use App\Mail\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -30,7 +30,13 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function sendEmailVerificationNotification(): void
     {
-        $this->notify(new VerifyEmailNotification);
+        $url = \Illuminate\Support\Facades\URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(60),
+            ['id' => $this->getKey(), 'hash' => sha1($this->getEmailForVerification())]
+        );
+
+        \Illuminate\Support\Facades\Mail::to($this->email)->send(new VerifyEmail($url));
     }
 
     public function projects()
