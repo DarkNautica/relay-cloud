@@ -12,11 +12,16 @@ use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, RelayServerService $relay)
     {
         $projects = $request->user()->projects()->latest()->get();
 
-        return view('projects.index', compact('projects'));
+        $projectStats = [];
+        foreach ($projects as $project) {
+            $projectStats[$project->app_id] = $relay->getProjectStats($project->app_id, $project->app_secret);
+        }
+
+        return view('projects.index', compact('projects', 'projectStats'));
     }
 
     public function create(Request $request, PlanService $planService)

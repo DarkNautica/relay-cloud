@@ -19,9 +19,14 @@ class DashboardController extends Controller
         $serverOnline = $relay->isServerOnline();
         $serverStats = $relay->getServerStats();
 
+        $projectStats = [];
+        foreach ($projects as $project) {
+            $projectStats[$project->app_id] = $relay->getProjectStats($project->app_id, $project->app_secret);
+        }
+
         return view('dashboard', compact(
             'projects', 'totalConnections', 'planName', 'currentPlan',
-            'serverOnline', 'serverStats'
+            'serverOnline', 'serverStats', 'projectStats'
         ));
     }
 }

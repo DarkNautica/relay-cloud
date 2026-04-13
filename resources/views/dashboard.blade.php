@@ -83,7 +83,7 @@
                                     <span class="badge-dot"></span>{{ $project->is_active ? 'Active' : 'Inactive' }}
                                 </span>
                             </td>
-                            <td style="font-family:var(--font-mono);font-size:12px;">0 / {{ number_format($project->max_connections) }}</td>
+                            <td style="font-family:var(--font-mono);font-size:12px;">{{ $projectStats[$project->app_id]['connections'] ?? 0 }} / {{ number_format($project->max_connections) }}</td>
                             <td style="color:var(--text-tertiary);font-size:12px;">{{ $project->created_at->diffForHumans() }}</td>
                             <td style="width:40px;" onclick="event.stopPropagation()">
                                 <div class="ctx-menu">
