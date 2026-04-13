@@ -22,7 +22,7 @@ class AppRegistryService
                 'key' => $project->app_key,
                 'secret' => $project->app_secret,
                 'max_connections' => $project->max_connections,
-                'history' => false,
+                'history' => true,
             ])
             ->values()
             ->toArray();
