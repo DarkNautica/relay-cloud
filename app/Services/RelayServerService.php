@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Project;
 use Illuminate\Support\Facades\Http;
 
 class RelayServerService
@@ -66,6 +67,48 @@ class RelayServerService
         }
 
         return [];
+    }
+
+    public function getProjectChannels(Project $project): array
+    {
+        try {
+            $response = Http::timeout(2)
+                ->withToken($project->app_secret)
+                ->get("{$this->baseUrl}/apps/{$project->app_id}/channels");
+
+            if ($response->successful()) {
+                return $response->json('channels') ?? [];
+            }
+        } catch (\Exception $e) {
+            //
+        }
+
+        return [];
+    }
+
+    public function getChannelEvents(Project $project, string $channel, int $limit = 25, ?string $cursor = null): array
+    {
+        try {
+            $query = ['limit' => $limit];
+            if ($cursor) {
+                $query['cursor'] = $cursor;
+            }
+
+            $response = Http::timeout(2)
+                ->withToken($project->app_secret)
+                ->get("{$this->baseUrl}/apps/{$project->app_id}/channels/{$channel}/events", $query);
+
+            if ($response->successful()) {
+                return [
+                    'events' => $response->json('events') ?? [],
+                    'next_cursor' => $response->json('next_cursor'),
+                ];
+            }
+        } catch (\Exception $e) {
+            //
+        }
+
+        return ['events' => [], 'next_cursor' => null];
     }
 
     public function isServerOnline(): bool

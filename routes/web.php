@@ -10,6 +10,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UsageController;
 use App\Http\Controllers\WebhookConfigController;
+use App\Http\Controllers\InspectorController;
 use App\Http\Controllers\WebhookController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/projects/{project}/rotate-key', [ProjectController::class, 'rotateKey'])->name('projects.rotate-key');
     Route::post('/projects/{project}/rotate-secret', [ProjectController::class, 'rotateSecret'])->name('projects.rotate-secret');
     Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
+    Route::get('/projects/{project}/inspector', [InspectorController::class, 'show'])->name('inspector.show');
+    Route::get('/projects/{project}/inspector/channels', [InspectorController::class, 'channels'])->name('inspector.channels');
+    Route::get('/projects/{project}/inspector/events/{channel}', [InspectorController::class, 'events'])->name('inspector.events');
     Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 
     Route::get('/usage', [UsageController::class, 'index'])->name('usage');
