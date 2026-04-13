@@ -29,4 +29,11 @@ class DashboardController extends Controller
             'serverOnline', 'serverStats', 'projectStats'
         ));
     }
+
+    public function dismiss2faNudge()
+    {
+        session(['hide_2fa_nudge' => true]);
+
+        return redirect()->route('dashboard');
+    }
 }

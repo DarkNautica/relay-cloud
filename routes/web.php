@@ -39,6 +39,7 @@ Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 // Authenticated dashboard
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/dashboard/dismiss-2fa-nudge', [DashboardController::class, 'dismiss2faNudge'])->name('dashboard.dismiss-2fa-nudge');
 
     Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
     Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');

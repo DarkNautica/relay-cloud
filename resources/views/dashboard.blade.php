@@ -9,6 +9,25 @@
 @endsection
 
 @section('content')
+@if(!Auth::user()->two_factor_enabled && !session('hide_2fa_nudge'))
+<div style="display:flex;align-items:center;gap:14px;padding:14px 18px;margin-bottom:20px;background:linear-gradient(135deg,rgba(124,58,237,0.06),rgba(124,58,237,0.02));border:1px solid rgba(124,58,237,0.15);border-left:3px solid var(--accent);border-radius:8px;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;color:var(--accent-light);flex-shrink:0;">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+    <div style="flex:1;font-size:13px;color:var(--text-secondary);">
+        <strong style="color:var(--text-primary);">Secure your account</strong> &mdash; Enable two-factor authentication to protect your credentials and projects.
+    </div>
+    <form method="POST" action="{{ route('two-factor.enable') }}" style="flex-shrink:0;">
+        @csrf
+        <button type="submit" class="btn btn-primary btn-sm">Enable 2FA</button>
+    </form>
+    <form method="POST" action="{{ route('dashboard.dismiss-2fa-nudge') }}" style="flex-shrink:0;">
+        @csrf
+        <button type="submit" class="btn btn-secondary btn-sm">Dismiss</button>
+    </form>
+</div>
+@endif
+
 <div class="page-header">
     <div>
         <h1 class="page-title">Dashboard</h1>
