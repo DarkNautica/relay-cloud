@@ -9,6 +9,8 @@ use App\Http\Controllers\MarketingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\TwoFactorChallengeController;
+use App\Http\Controllers\TwoFactorController;
 use App\Http\Controllers\UsageController;
 use App\Http\Controllers\WebhookConfigController;
 use App\Http\Controllers\InspectorController;
@@ -68,9 +70,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password');
     Route::delete('/settings/account', [SettingsController::class, 'deleteAccount'])->name('settings.delete');
 
+    Route::get('/settings/2fa', [TwoFactorController::class, 'show'])->name('two-factor.show');
+    Route::post('/settings/2fa/enable', [TwoFactorController::class, 'enable'])->name('two-factor.enable');
+    Route::get('/settings/2fa/confirm', [TwoFactorController::class, 'confirm'])->name('two-factor.confirm');
+    Route::post('/settings/2fa/confirm', [TwoFactorController::class, 'store'])->name('two-factor.store');
+    Route::post('/settings/2fa/disable', [TwoFactorController::class, 'disable'])->name('two-factor.disable')->middleware('password.confirm');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/two-factor-challenge', [TwoFactorChallengeController::class, 'show'])->name('two-factor.challenge');
+    Route::post('/two-factor-challenge', [TwoFactorChallengeController::class, 'store']);
 });
 
 Route::post('/stripe/webhook', [WebhookController::class, 'handle'])->name('stripe.webhook');
