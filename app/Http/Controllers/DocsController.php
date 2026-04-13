@@ -43,4 +43,29 @@ class DocsController extends Controller
     {
         return view('docs.cloud.billing');
     }
+
+    public function nextjs()
+    {
+        return view('docs.guides.nextjs');
+    }
+
+    public function rails()
+    {
+        return view('docs.guides.rails');
+    }
+
+    public function django()
+    {
+        return view('docs.guides.django');
+    }
+
+    public function node()
+    {
+        return view('docs.guides.node');
+    }
+
+    public function vsReverb()
+    {
+        return view('docs.vs-reverb');
+    }
 }

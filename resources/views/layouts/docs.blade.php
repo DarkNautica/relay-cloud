@@ -138,10 +138,17 @@
             <a href="{{ route('docs.os.configuration') }}" class="ds-link {{ request()->routeIs('docs.os.configuration') ? 'active' : '' }}">Configuration</a>
             <a href="{{ route('docs.os.api-reference') }}" class="ds-link {{ request()->routeIs('docs.os.api-reference') ? 'active' : '' }}">API Reference</a>
             <a href="{{ route('docs.os.sdks') }}" class="ds-link {{ request()->routeIs('docs.os.sdks') ? 'active' : '' }}">SDKs</a>
+            <div class="ds-section">Framework Guides</div>
+            <a href="{{ route('docs.guides.nextjs') }}" class="ds-link {{ request()->routeIs('docs.guides.nextjs') ? 'active' : '' }}">Next.js</a>
+            <a href="{{ route('docs.guides.rails') }}" class="ds-link {{ request()->routeIs('docs.guides.rails') ? 'active' : '' }}">Rails</a>
+            <a href="{{ route('docs.guides.django') }}" class="ds-link {{ request()->routeIs('docs.guides.django') ? 'active' : '' }}">Django</a>
+            <a href="{{ route('docs.guides.node') }}" class="ds-link {{ request()->routeIs('docs.guides.node') ? 'active' : '' }}">Node.js</a>
             <div class="ds-section">Cloud</div>
             <a href="{{ route('docs.cloud.getting-started') }}" class="ds-link {{ request()->routeIs('docs.cloud.getting-started') ? 'active' : '' }}">Getting Started</a>
             <a href="{{ route('docs.cloud.projects') }}" class="ds-link {{ request()->routeIs('docs.cloud.projects') ? 'active' : '' }}">Projects</a>
             <a href="{{ route('docs.cloud.billing') }}" class="ds-link {{ request()->routeIs('docs.cloud.billing') ? 'active' : '' }}">Billing</a>
+            <div class="ds-section">Comparisons</div>
+            <a href="{{ route('docs.vs-reverb') }}" class="ds-link {{ request()->routeIs('docs.vs-reverb') ? 'active' : '' }}">vs Reverb</a>
         </aside>
         <main class="docs-content prose">
             @yield('content')

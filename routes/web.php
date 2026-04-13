@@ -24,6 +24,11 @@ Route::get('/docs/open-source/sdks', [DocsController::class, 'openSourceSdks'])-
 Route::get('/docs/cloud/getting-started', [DocsController::class, 'cloudGettingStarted'])->name('docs.cloud.getting-started');
 Route::get('/docs/cloud/projects', [DocsController::class, 'cloudProjects'])->name('docs.cloud.projects');
 Route::get('/docs/cloud/billing', [DocsController::class, 'cloudBilling'])->name('docs.cloud.billing');
+Route::get('/docs/guides/nextjs', [DocsController::class, 'nextjs'])->name('docs.guides.nextjs');
+Route::get('/docs/guides/rails', [DocsController::class, 'rails'])->name('docs.guides.rails');
+Route::get('/docs/guides/django', [DocsController::class, 'django'])->name('docs.guides.django');
+Route::get('/docs/guides/node', [DocsController::class, 'node'])->name('docs.guides.node');
+Route::get('/docs/vs-reverb', [DocsController::class, 'vsReverb'])->name('docs.vs-reverb');
 
 // Authenticated dashboard
 Route::middleware(['auth', 'verified'])->group(function () {

@@ -91,5 +91,39 @@
             <a href="{{ route('register') }}" class="hub-card-cta">Start Free &rarr;</a>
         </div>
     </div>
+
+    <!-- Framework Guides -->
+    <div class="hub-card" style="margin-top:16px;">
+        <svg class="hub-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        <h2 style="font-size:18px;font-weight:700;margin-bottom:4px;">Framework Guides</h2>
+        <p style="font-size:13px;color:var(--t2);margin-bottom:12px;">Step-by-step quickstarts for popular frameworks beyond Laravel.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+            <a href="{{ route('docs.guides.nextjs') }}" class="hub-link">
+                <span class="hub-link-title">Next.js</span>
+                <span class="hub-link-desc">React + Pusher JS client</span>
+                <span class="hub-link-arrow">&rarr;</span>
+            </a>
+            <a href="{{ route('docs.guides.rails') }}" class="hub-link">
+                <span class="hub-link-title">Rails</span>
+                <span class="hub-link-desc">Ruby Pusher gem</span>
+                <span class="hub-link-arrow">&rarr;</span>
+            </a>
+            <a href="{{ route('docs.guides.django') }}" class="hub-link">
+                <span class="hub-link-title">Django</span>
+                <span class="hub-link-desc">Python Pusher SDK</span>
+                <span class="hub-link-arrow">&rarr;</span>
+            </a>
+            <a href="{{ route('docs.guides.node') }}" class="hub-link">
+                <span class="hub-link-title">Node.js</span>
+                <span class="hub-link-desc">Express + Pusher server SDK</span>
+                <span class="hub-link-arrow">&rarr;</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Comparisons -->
+    <div style="margin-top:20px;text-align:center;">
+        <a href="{{ route('docs.vs-reverb') }}" style="font-size:13px;font-weight:600;color:var(--accent-l);">Relay vs Laravel Reverb &mdash; honest comparison &rarr;</a>
+    </div>
 </div>
 @endsection
