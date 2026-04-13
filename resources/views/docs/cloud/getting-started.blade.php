@@ -20,7 +20,7 @@
 
 <div class="step"><span class="step-num">3</span><h2>Connect Your App</h2></div>
 <p>Your WebSocket endpoint is:</p>
-<pre><code>wss://ws.relaycloud.dev/app/{your-app-key}</code></pre>
+<pre><code class="language-plaintext">wss://ws.relaycloud.dev/app/{your-app-key}</code></pre>
 
 <div class="tabs">
     <button class="tab active" data-tab-btn="cloud-connect" onclick="showDocTab('cloud-connect','laravel',this)">Laravel</button>
@@ -28,7 +28,7 @@
     <button class="tab" data-tab-btn="cloud-connect" onclick="showDocTab('cloud-connect','js',this)">JavaScript</button>
 </div>
 <div class="tab-panel active" data-tab-group="cloud-connect" data-tab="laravel">
-<pre><code>// config/broadcasting.php
+<pre><code class="language-php">// config/broadcasting.php
 'relay' => [
     'driver' => 'pusher',
     'key' => env('RELAY_APP_KEY'),
@@ -41,14 +41,14 @@
         'encrypted' => true,
     ],
 ]</code></pre>
-<pre><code># .env
+<pre><code class="language-bash"># .env
 BROADCAST_CONNECTION=relay
 RELAY_APP_KEY=your-app-key
 RELAY_APP_SECRET=your-app-secret
 RELAY_APP_ID=your-app-id</code></pre>
 </div>
 <div class="tab-panel" data-tab-group="cloud-connect" data-tab="node">
-<pre><code>const Pusher = require('pusher');
+<pre><code class="language-javascript">const Pusher = require('pusher');
 
 const pusher = new Pusher({
     appId: 'your-app-id',
@@ -60,7 +60,7 @@ const pusher = new Pusher({
 });</code></pre>
 </div>
 <div class="tab-panel" data-tab-group="cloud-connect" data-tab="js">
-<pre><code>import Echo from 'laravel-echo';
+<pre><code class="language-javascript">import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
 window.Pusher = Pusher;
@@ -76,7 +76,7 @@ const echo = new Echo({
 </div>
 
 <div class="step"><span class="step-num">4</span><h2>Publish Your First Event</h2></div>
-<pre><code>// Laravel example
+<pre><code class="language-php">// Laravel example
 broadcast(new MessageSent($message));
 
 // Or directly

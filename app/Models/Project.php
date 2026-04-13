@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-#[Fillable(['name', 'max_connections', 'is_active'])]
+#[Fillable(['name', 'max_connections', 'is_active', 'app_key', 'app_secret'])]
 class Project extends Model
 {
     protected function casts(): array

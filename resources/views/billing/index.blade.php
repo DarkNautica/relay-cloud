@@ -49,7 +49,7 @@
         @endphp
         <div>
             <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px;">
-                <span style="color:var(--text-tertiary);">Active Connections</span>
+                <span style="color:var(--text-tertiary);">Active Connections @if(!$relayOnline)<span style="font-size:10px;color:var(--text-tertiary);opacity:0.7;">(relay server offline)</span>@endif</span>
                 <span style="font-family:var(--font-mono);font-size:11px;">{{ number_format($activeConnections) }} / {{ $maxConnections == -1 ? 'Unlimited' : number_format($maxConnections) }}</span>
             </div>
             <div style="display:flex;align-items:center;gap:10px;">

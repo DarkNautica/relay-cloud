@@ -8,6 +8,7 @@ use App\Services\AppRegistryService;
 use App\Services\PlanService;
 use App\Services\RelayServerService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
@@ -90,6 +91,36 @@ class ProjectController extends Controller
         ActivityService::log($request->user(), 'project.resumed', 'Resumed project "' . $project->name . '"', ['project_id' => $project->id]);
 
         return response()->json(['status' => 'active']);
+    }
+
+    public function rotateKey(Request $request, Project $project, AppRegistryService $registry)
+    {
+        if ($project->user_id !== $request->user()->id) {
+            abort(403);
+        }
+
+        $newKey = Str::lower(Str::random(32));
+        $project->update(['app_key' => $newKey]);
+        $registry->syncToServer();
+
+        ActivityService::log($request->user(), 'project.key_rotated', 'Rotated app key for "' . $project->name . '"', ['project_id' => $project->id]);
+
+        return redirect()->route('projects.show', $project)->with('rotated_key', $newKey);
+    }
+
+    public function rotateSecret(Request $request, Project $project, AppRegistryService $registry)
+    {
+        if ($project->user_id !== $request->user()->id) {
+            abort(403);
+        }
+
+        $newSecret = Str::random(64);
+        $project->update(['app_secret' => $newSecret]);
+        $registry->syncToServer();
+
+        ActivityService::log($request->user(), 'project.secret_rotated', 'Rotated app secret for "' . $project->name . '"', ['project_id' => $project->id]);
+
+        return redirect()->route('projects.show', $project)->with('rotated_secret', $newSecret);
     }
 
     public function destroy(Request $request, Project $project, AppRegistryService $registry)

@@ -18,12 +18,20 @@ class BillingController extends Controller
         $maxConnections = PlanService::getPlan($currentPlan)['max_connections'];
         $maxProjects = PlanService::getPlan($currentPlan)['max_projects'];
 
-        $serverStats = $relay->getServerStats();
-        $activeConnections = $serverStats['connections'];
+        $relayOnline = $relay->isServerOnline();
+        $activeConnections = 0;
+
+        if ($relayOnline) {
+            $projects = $user->projects()->where('is_active', true)->get();
+            foreach ($projects as $project) {
+                $stats = $relay->getProjectStats($project->app_id, $project->app_secret);
+                $activeConnections += $stats['subscriber_count'];
+            }
+        }
 
         return view('billing.index', compact(
             'currentPlan', 'plans', 'projectCount', 'activeConnections',
-            'isSubscribed', 'maxConnections', 'maxProjects'
+            'isSubscribed', 'maxConnections', 'maxProjects', 'relayOnline'
         ));
     }
 

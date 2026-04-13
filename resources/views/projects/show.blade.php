@@ -44,6 +44,28 @@
     </div>
 </div>
 
+<!-- Rotated credential reveal -->
+@if(session('rotated_key'))
+<div style="border:1px solid var(--accent);border-radius:10px;padding:16px 20px;margin-bottom:16px;background:rgba(124,58,237,0.06);">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span style="font-size:13px;font-weight:600;color:var(--accent-light);">New App Key &mdash; Save this now</span>
+    </div>
+    <input type="text" readonly value="{{ session('rotated_key') }}" style="width:100%;padding:8px 12px;background:var(--bg-base);border:1px solid var(--border);border-radius:6px;color:var(--text-primary);font-family:var(--font-mono);font-size:12px;margin-bottom:6px;outline:none;" onclick="this.select();copyToClipboard(this.value)">
+    <div style="font-size:11px;color:var(--text-tertiary);">This value will not be shown again after you navigate away from this page.</div>
+</div>
+@endif
+@if(session('rotated_secret'))
+<div style="border:1px solid var(--accent);border-radius:10px;padding:16px 20px;margin-bottom:16px;background:rgba(124,58,237,0.06);">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span style="font-size:13px;font-weight:600;color:var(--accent-light);">New App Secret &mdash; Save this now</span>
+    </div>
+    <input type="text" readonly value="{{ session('rotated_secret') }}" style="width:100%;padding:8px 12px;background:var(--bg-base);border:1px solid var(--border);border-radius:6px;color:var(--text-primary);font-family:var(--font-mono);font-size:12px;margin-bottom:6px;outline:none;" onclick="this.select();copyToClipboard(this.value)">
+    <div style="font-size:11px;color:var(--text-tertiary);">This value will not be shown again after you navigate away from this page.</div>
+</div>
+@endif
+
 <!-- Credentials -->
 <div class="card" style="margin-bottom:16px;">
     <div class="card-header"><span class="card-title">API Credentials</span></div>
@@ -67,6 +89,9 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                 <span class="tooltip">Copied!</span>
             </button>
+            <button class="icon-btn" onclick="document.getElementById('dlg-rotate-key').showModal()" title="Rotate">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            </button>
         </div>
         <div class="cred-row">
             <div class="cred-info">
@@ -79,6 +104,9 @@
             <button class="icon-btn" onclick="copyToClipboard('{{ $project->app_secret }}',this)" style="position:relative;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                 <span class="tooltip">Copied!</span>
+            </button>
+            <button class="icon-btn" onclick="document.getElementById('dlg-rotate-secret').showModal()" title="Rotate">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
             </button>
         </div>
         <div class="cred-row" style="margin-bottom:0;">
@@ -93,6 +121,38 @@
         </div>
     </div>
 </div>
+
+<!-- Rotate Key Dialog -->
+<dialog id="dlg-rotate-key" style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;padding:24px;max-width:440px;color:var(--text-primary);box-shadow:0 4px 24px rgba(0,0,0,0.5);">
+    <div style="font-size:16px;font-weight:600;margin-bottom:8px;">Rotate App Key</div>
+    <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:18px;">
+        Rotating your App Key will immediately invalidate the current value.
+        Any application using the old credential will disconnect. This cannot be undone.
+    </p>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('dlg-rotate-key').close()">Cancel</button>
+        <form method="POST" action="{{ route('projects.rotate-key', $project) }}">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-sm">Rotate Now</button>
+        </form>
+    </div>
+</dialog>
+
+<!-- Rotate Secret Dialog -->
+<dialog id="dlg-rotate-secret" style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;padding:24px;max-width:440px;color:var(--text-primary);box-shadow:0 4px 24px rgba(0,0,0,0.5);">
+    <div style="font-size:16px;font-weight:600;margin-bottom:8px;">Rotate App Secret</div>
+    <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:18px;">
+        Rotating your App Secret will immediately invalidate the current value.
+        Any application using the old credential will disconnect. This cannot be undone.
+    </p>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('dlg-rotate-secret').close()">Cancel</button>
+        <form method="POST" action="{{ route('projects.rotate-secret', $project) }}">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-sm">Rotate Now</button>
+        </form>
+    </div>
+</dialog>
 
 <!-- Quick Start -->
 <div class="card" style="margin-bottom:16px;">
