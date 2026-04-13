@@ -22,8 +22,8 @@ class RecordUsageCommand extends Command
 
             UsageStat::create([
                 'project_id' => $project->id,
-                'connections_peak' => $stats['subscriber_count'],
-                'messages_count' => 0,
+                'connections_peak' => $stats['connections'],
+                'messages_count' => $stats['messages_count'],
                 'recorded_at' => now(),
             ]);
         }

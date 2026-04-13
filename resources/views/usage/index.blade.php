@@ -46,7 +46,7 @@
     <div class="card-header"><span class="card-title">Per-Project Breakdown</span></div>
     <div style="overflow-x:auto;">
         <table>
-            <thead><tr><th>Project</th><th>App ID</th><th class="col-conn">Subscribers</th><th class="col-conn">Max</th><th class="col-status">Usage</th><th class="col-status">Status</th></tr></thead>
+            <thead><tr><th>Project</th><th>App ID</th><th class="col-conn">Connections</th><th class="col-conn">Max</th><th class="col-status">Usage</th><th class="col-status">Status</th></tr></thead>
             <tbody>
             @foreach($projects as $project)
                 @php
