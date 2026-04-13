@@ -122,22 +122,36 @@
         const ts = ev.timestamp ? new Date(ev.timestamp) : new Date();
         const timeStr = ts.toLocaleTimeString('en-US', {hour12:false}) + '.' + String(ts.getMilliseconds()).padStart(3,'0');
 
-        let latency = ev.latency_ms ?? ev.latency ?? ev.duration_ms ?? null;
-        // If latency came in microseconds, convert
-        if (latency === null && ev.latency_us != null) latency = Math.round(ev.latency_us / 1000);
+        // Latency: check all possible field names from the relay server
+        let latency = null;
+        for (const key of ['latency_ms', 'latency', 'duration_ms', 'delivery_latency_ms']) {
+            if (ev[key] != null && ev[key] !== '') { latency = Number(ev[key]); break; }
+        }
+        if (latency === null && ev.latency_us != null) latency = Math.round(Number(ev.latency_us) / 1000);
+        // Compute from timestamps if available
+        if (latency === null && ev.published_at && ev.delivered_at) {
+            latency = Math.max(0, new Date(ev.delivered_at) - new Date(ev.published_at));
+        }
         let latencyColor = 'var(--text-tertiary)';
         let latencyText = '—';
-        if (latency !== null && latency !== undefined) {
+        if (latency !== null && !isNaN(latency)) {
             latencyText = latency + 'ms';
             if (latency < 20) latencyColor = 'var(--success)';
             else if (latency <= 100) latencyColor = 'var(--warning)';
             else latencyColor = 'var(--danger)';
         }
 
-        let delivered = ev.delivered_count ?? ev.subscribers ?? ev.subscriber_count ?? ev.delivery_count ?? ev.num_recipients ?? null;
-        // Also check inside a nested deliveries/stats object
-        if (delivered === null && ev.stats) delivered = ev.stats.delivered ?? ev.stats.recipients ?? null;
-        const deliveredText = delivered !== null && delivered !== undefined ? delivered + ' client' + (delivered !== 1 ? 's' : '') : '—';
+        // Delivered: check all possible field names from the relay server
+        let delivered = null;
+        for (const key of ['delivered_count', 'delivery_count', 'subscribers', 'subscriber_count', 'num_recipients', 'recipients_count', 'subscription_count']) {
+            if (ev[key] != null && ev[key] !== '') { delivered = Number(ev[key]); break; }
+        }
+        if (delivered === null && ev.stats) {
+            delivered = ev.stats.delivered ?? ev.stats.recipients ?? ev.stats.subscriber_count ?? null;
+        }
+        if (delivered === null && Array.isArray(ev.socket_ids)) delivered = ev.socket_ids.length;
+        if (delivered === null && Array.isArray(ev.recipients)) delivered = ev.recipients.length;
+        const deliveredText = delivered !== null && !isNaN(delivered) ? delivered + ' client' + (delivered !== 1 ? 's' : '') : '—';
 
         tr.innerHTML =
             '<td style="font-family:var(--font-mono);font-size:12px;color:var(--text-tertiary);">' + esc(timeStr) + '</td>' +

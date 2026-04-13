@@ -146,6 +146,7 @@ class RelayServerService
 
     public function getProjectEvents(Project $project, int $limit = 25, ?string $cursor = null, ?string $channel = null): array
     {
+        // Try the dedicated events endpoint first
         try {
             $query = ['limit' => $limit];
             if ($cursor) {
@@ -160,11 +161,33 @@ class RelayServerService
                 ->get("{$this->baseUrl}/apps/{$project->app_id}/events", $query);
 
             if ($response->successful()) {
-                return [
-                    'events' => $response->json('events') ?? [],
-                    'next_cursor' => $response->json('next_cursor'),
-                ];
+                $events = $response->json('events') ?? [];
+                if (!empty($events) || $response->json('next_cursor') !== null) {
+                    return [
+                        'events' => $events,
+                        'next_cursor' => $response->json('next_cursor'),
+                    ];
+                }
             }
+        } catch (\Exception $e) {
+            //
+        }
+
+        // Fallback: aggregate events from active channels (no cursor support)
+        if ($cursor) {
+            return ['events' => [], 'next_cursor' => null];
+        }
+
+        try {
+            if ($channel) {
+                $result = $this->getChannelEvents($project, $channel, $limit);
+                return $result;
+            }
+
+            return [
+                'events' => $this->getProjectEventLog($project->app_id, $project->app_secret),
+                'next_cursor' => null,
+            ];
         } catch (\Exception $e) {
             //
         }
