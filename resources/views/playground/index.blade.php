@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<script src="https://js.pusher.com/8.4.0-rc2/pusher.min.js"></script>
+<script src="https://js.pusher.com/7.6.0/pusher.min.js"></script>
 <script>
 (function() {
     const appKey = @json($config['app_key']);
@@ -123,7 +123,7 @@
         return;
     }
 
-    const pusher = new Pusher(appKey, {
+    window.playgroundPusher = new Pusher(appKey, {
         wsHost: host,
         wsPort: port,
         wssPort: port,
@@ -133,6 +133,7 @@
         cluster: 'relay'
     });
 
+    const pusher = window.playgroundPusher;
     const dot = document.getElementById('pg-dot');
     const statusText = document.getElementById('pg-status-text');
 
@@ -145,6 +146,12 @@
         dot.style.background = 'var(--danger)';
         statusText.style.color = 'var(--danger)';
         statusText.textContent = 'Disconnected';
+    });
+    pusher.connection.bind('error', (err) => {
+        console.error('Playground WebSocket error:', err);
+        dot.style.background = 'var(--danger)';
+        statusText.style.color = 'var(--danger)';
+        statusText.textContent = 'Connection failed';
     });
 
     let currentChannel = null;
