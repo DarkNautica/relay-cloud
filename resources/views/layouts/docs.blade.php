@@ -119,6 +119,7 @@
             </a>
             <div class="nav-links">
                 <a href="{{ route('docs') }}" class="{{ request()->is('docs*') ? 'active' : '' }}">Docs</a>
+                <a href="{{ route('blog') }}" class="{{ request()->is('blog*') ? 'active' : '' }}">Blog</a>
                 <a href="https://github.com/DarkNautica/Relay" target="_blank">GitHub</a>
             </div>
         </div>
@@ -166,6 +167,7 @@
             <a href="https://github.com/DarkNautica/Relay" target="_blank">GitHub</a>
             <a href="{{ route('docs.os.getting-started') }}">Self-Hosting</a>
             <a href="{{ route('docs.os.api-reference') }}">API Reference</a>
+            <a href="{{ route('blog') }}">Blog</a>
         </div>
         <div class="docs-footer-copy">MIT Licensed &middot; Open Source</div>
     </footer>

@@ -25,7 +25,7 @@ class BillingController extends Controller
             $projects = $user->projects()->where('is_active', true)->get();
             foreach ($projects as $project) {
                 $stats = $relay->getProjectStats($project->app_id, $project->app_secret);
-                $activeConnections += $stats['subscriber_count'];
+                $activeConnections += $stats['connections'];
             }
         }
 

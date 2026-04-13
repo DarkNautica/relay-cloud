@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\BillingController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocsController;
 use App\Http\Controllers\MarketingController;
@@ -29,6 +30,8 @@ Route::get('/docs/guides/rails', [DocsController::class, 'rails'])->name('docs.g
 Route::get('/docs/guides/django', [DocsController::class, 'django'])->name('docs.guides.django');
 Route::get('/docs/guides/node', [DocsController::class, 'node'])->name('docs.guides.node');
 Route::get('/docs/vs-reverb', [DocsController::class, 'vsReverb'])->name('docs.vs-reverb');
+Route::get('/blog', [BlogController::class, 'index'])->name('blog');
+Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
 // Authenticated dashboard
 Route::middleware(['auth', 'verified'])->group(function () {

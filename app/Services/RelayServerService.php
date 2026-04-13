@@ -37,31 +37,64 @@ class RelayServerService
         try {
             $response = Http::timeout(2)
                 ->withToken($appSecret)
-                ->get("{$this->baseUrl}/apps/{$appId}/channels");
+                ->get("{$this->baseUrl}/apps/{$appId}/stats");
 
             if ($response->successful()) {
                 return [
+                    'connections' => (int) ($response->json('connections') ?? 0),
+                    'peak_connections' => (int) ($response->json('peak_connections') ?? 0),
+                    'messages_count' => (int) ($response->json('messages_count') ?? 0),
+                    // Keep subscriber_count as alias for connections for backward compat
+                    'subscriber_count' => (int) ($response->json('connections') ?? 0),
                     'channels' => (int) ($response->json('channels') ?? 0),
-                    'subscriber_count' => (int) ($response->json('subscriber_count') ?? 0),
                 ];
             }
         } catch (\Exception $e) {
             //
         }
 
-        return ['channels' => 0, 'subscriber_count' => 0];
+        return ['connections' => 0, 'peak_connections' => 0, 'messages_count' => 0, 'subscriber_count' => 0, 'channels' => 0];
     }
 
     public function getProjectEventLog(string $appId, string $appSecret): array
     {
         try {
-            $response = Http::timeout(2)
+            // Fetch all active channels, then recent events from each
+            $channelsResponse = Http::timeout(2)
                 ->withToken($appSecret)
-                ->get("{$this->baseUrl}/apps/{$appId}/events/log");
+                ->get("{$this->baseUrl}/apps/{$appId}/channels");
 
-            if ($response->successful()) {
-                return $response->json() ?? [];
+            if (! $channelsResponse->successful()) {
+                return [];
             }
+
+            $channels = $channelsResponse->json('channels') ?? [];
+            $allEvents = [];
+
+            foreach (array_keys($channels) as $channelName) {
+                try {
+                    $evResponse = Http::timeout(2)
+                        ->withToken($appSecret)
+                        ->get("{$this->baseUrl}/apps/{$appId}/channels/{$channelName}/events", ['limit' => 10]);
+
+                    if ($evResponse->successful()) {
+                        $events = $evResponse->json('events') ?? [];
+                        foreach ($events as &$event) {
+                            $event['channel'] = $channelName;
+                        }
+                        $allEvents = array_merge($allEvents, $events);
+                    }
+                } catch (\Exception $e) {
+                    //
+                }
+            }
+
+            // Sort by timestamp descending
+            usort($allEvents, function ($a, $b) {
+                return strcmp($b['timestamp'] ?? '', $a['timestamp'] ?? '');
+            });
+
+            return array_slice($allEvents, 0, 20);
         } catch (\Exception $e) {
             //
         }

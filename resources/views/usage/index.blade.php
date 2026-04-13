@@ -50,14 +50,14 @@
             <tbody>
             @foreach($projects as $project)
                 @php
-                    $ps = $projectStats[$project->id] ?? ['subscriber_count' => 0];
-                    $usagePct = $project->max_connections > 0 ? round(($ps['subscriber_count'] / $project->max_connections) * 100) : 0;
+                    $ps = $projectStats[$project->id] ?? ['connections' => 0];
+                    $usagePct = $project->max_connections > 0 ? round(($ps['connections'] / $project->max_connections) * 100) : 0;
                     $usageColor = $usagePct >= 90 ? 'var(--danger)' : ($usagePct >= 70 ? 'var(--warning)' : 'var(--success)');
                 @endphp
                 <tr style="cursor:default;">
                     <td style="font-weight:600;color:var(--text-primary);">{{ $project->name }}</td>
                     <td style="font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);">{{ $project->app_id }}</td>
-                    <td style="font-family:var(--font-mono);font-size:12px;">{{ $ps['subscriber_count'] }}</td>
+                    <td style="font-family:var(--font-mono);font-size:12px;">{{ $ps['connections'] }}</td>
                     <td style="font-family:var(--font-mono);font-size:12px;">{{ number_format($project->max_connections) }}</td>
                     <td style="font-weight:600;color:{{ $usageColor }};font-size:12px;">{{ $usagePct }}%</td>
                     <td>

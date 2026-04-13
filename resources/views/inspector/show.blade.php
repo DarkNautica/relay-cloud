@@ -135,6 +135,8 @@ broadcast(new MessageSent($data))
     let isLive = true;
     let userScrolled = false;
     let nextCursor = null;
+    const expandedEvents = new Set();
+    const renderedEventIds = new Set();
 
     const chList = document.getElementById('ch-list');
     const chEmpty = document.getElementById('ch-empty');
@@ -237,49 +239,87 @@ broadcast(new MessageSent($data))
         selectedChannel = name;
         events = [];
         nextCursor = null;
+        expandedEvents.clear();
+        renderedEventIds.clear();
+        evStream.querySelectorAll('.ev-row').forEach(el => el.remove());
         evLabel.innerHTML = '<span style="font-family:var(--font-mono);color:var(--text-primary);">' + escHtml(name) + '</span>';
         renderChannels();
         fetchEvents();
+    }
+
+    function makeEventRow(ev) {
+        const uid = eventKey(ev);
+        const id = 'evp-' + uid.replace(/[^a-zA-Z0-9]/g, '').substring(0, 40);
+        const isOpen = expandedEvents.has(uid);
+        const row = document.createElement('div');
+        row.className = 'ev-row';
+        row.dataset.uid = uid;
+
+        const json = prettyJson(ev.data);
+        row.innerHTML = `
+            <div class="ev-row-main">
+                <span class="ev-time">${formatTime(ev.timestamp || ev.created_at)}</span>
+                <span class="ev-name" title="${escHtml(ev.event || ev.name || '')}">${escHtml(shortEventName(ev.event || ev.name || ''))}</span>
+                <span class="ev-expand${isOpen ? ' open' : ''}">&#8250;</span>
+            </div>
+            <div class="ev-payload${isOpen ? ' open' : ''}" id="${id}">
+                <div class="ev-payload-box">
+                    <button class="ev-payload-copy" onclick="event.stopPropagation();navigator.clipboard.writeText(this.parentElement.querySelector('code').textContent);this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500)">Copy</button>
+                    <pre><code class="language-json">${escHtml(json)}</code></pre>
+                </div>
+            </div>`;
+        row.querySelector('.ev-row-main').onclick = () => {
+            const payload = row.querySelector('.ev-payload');
+            const chevron = row.querySelector('.ev-expand');
+            payload.classList.toggle('open');
+            chevron.classList.toggle('open');
+            if (payload.classList.contains('open')) {
+                expandedEvents.add(uid);
+            } else {
+                expandedEvents.delete(uid);
+            }
+        };
+        // Highlight
+        const code = row.querySelector('pre code');
+        if (code && !code.dataset.highlighted) { hljs.highlightElement(code); code.dataset.highlighted = '1'; }
+        return row;
     }
 
     function renderEvents() {
         if (events.length === 0) {
             evEmpty.style.display = '';
             evStream.querySelectorAll('.ev-row,.ev-load-more').forEach(el => el.remove());
+            renderedEventIds.clear();
             return;
         }
         evEmpty.style.display = 'none';
 
-        const frag = document.createDocumentFragment();
-        events.slice(0, 50).forEach((ev, i) => {
-            const id = 'ev-' + i;
-            const row = document.createElement('div');
-            row.className = 'ev-row';
-            row.dataset.id = ev._uid || i;
+        const visible = events.slice(0, 50);
+        const newEvents = visible.filter(ev => !renderedEventIds.has(eventKey(ev)));
 
-            const json = prettyJson(ev.data);
-            row.innerHTML = `
-                <div class="ev-row-main" onclick="document.getElementById('${id}').classList.toggle('open');this.querySelector('.ev-expand').classList.toggle('open')">
-                    <span class="ev-time">${formatTime(ev.timestamp || ev.created_at)}</span>
-                    <span class="ev-name" title="${escHtml(ev.event || ev.name || '')}">${escHtml(shortEventName(ev.event || ev.name || ''))}</span>
-                    <span class="ev-expand">&#8250;</span>
-                </div>
-                <div class="ev-payload" id="${id}">
-                    <div class="ev-payload-box">
-                        <button class="ev-payload-copy" onclick="event.stopPropagation();navigator.clipboard.writeText(this.parentElement.querySelector('code').textContent);this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500)">Copy</button>
-                        <pre><code class="language-json">${escHtml(json)}</code></pre>
-                    </div>
-                </div>`;
-            frag.appendChild(row);
+        if (newEvents.length === 0) return; // Nothing new — don't touch DOM
+
+        // Prepend new events at top
+        const firstRow = evStream.querySelector('.ev-row');
+        newEvents.reverse().forEach(ev => {
+            const uid = eventKey(ev);
+            renderedEventIds.add(uid);
+            const row = makeEventRow(ev);
+            if (firstRow) {
+                evStream.insertBefore(row, firstRow);
+            } else {
+                evStream.appendChild(row);
+            }
         });
 
-        evStream.querySelectorAll('.ev-row,.ev-load-more').forEach(el => el.remove());
-        evStream.appendChild(frag);
-
-        // Highlight all code blocks
-        evStream.querySelectorAll('pre code').forEach(el => {
-            if (!el.dataset.highlighted) { hljs.highlightElement(el); el.dataset.highlighted = '1'; }
-        });
+        // Trim excess rows beyond 50
+        const rows = evStream.querySelectorAll('.ev-row');
+        if (rows.length > 50) {
+            for (let i = 50; i < rows.length; i++) {
+                renderedEventIds.delete(rows[i].dataset.uid);
+                rows[i].remove();
+            }
+        }
 
         if (!userScrolled) evStream.scrollTop = 0;
     }
